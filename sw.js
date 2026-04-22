@@ -1,5 +1,5 @@
 // lavr.SCHOOL — service worker (offline cache)
-const CACHE = 'lavr-school-v6';
+const CACHE = 'lavr-school-v7';
 const ASSETS = [
   './',
   './index.html',
