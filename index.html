@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v11 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v14 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -77,9 +77,8 @@ html, body {
 
 /* HEADER */
 .hdr {
-  padding: 0 0 12px;
-  border-bottom: 1px solid var(--lsf-line);
-  margin-bottom: 16px;
+  padding: 0 0 6px;              /* v013: лінію прибрано — padding зменшено 10 → 6 */
+  margin-bottom: 4px;
 }
 .brand {
   display: flex; align-items: center; gap: 10px;
@@ -330,7 +329,7 @@ html, body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; } /* v014: вирівняти .t-cat + .t-note на одну лінію */
 .t-cat {
   font-size: 10px; font-weight: 600;
   padding: 2px 6px; border-radius: 4px;
@@ -1090,7 +1089,7 @@ html, body {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v11</span>
+    <span class="footer-ver">v14</span>
   </footer>
 </div>
 
