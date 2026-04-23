@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v4 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v11 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -134,9 +134,11 @@ html, body {
 }
 .controls.stuck { border-bottom-color: var(--lsf-line); }
 /* v010f: btn-row прибрано — іконки тепер у search-row праворуч від поля пошуку */
-.search-row { display: flex; gap: 6px; align-items: center; }
+/* v011: gap 6→4, +min-width:0 на search (інакше input не сжимається і іконки вилітали) */
+.search-row { display: flex; gap: 4px; align-items: center; }
 .search {
-  flex: 1; height: 42px; padding: 0 14px;
+  flex: 1; min-width: 0;                /* v011: дозволити сжатись */
+  height: 42px; padding: 0 12px;        /* v011: padding 14 → 12 */
   font-size: 16px; font-family: inherit;
   border: 1px solid var(--lsf-line-strong);
   border-radius: var(--r-md);
@@ -1088,7 +1090,7 @@ html, body {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v4</span>
+    <span class="footer-ver">v11</span>
   </footer>
 </div>
 
@@ -5028,7 +5030,7 @@ function renderRecipeSheet(idx){
   if(!it.r){
     bodyHtml += `
       <div class="shell-note">
-        Позиція з v2 каталогу. Повна рецептура ще не додана в базу v4 — скоро розширимо. Поки можна подивитись оригінал на сайті Lesaffre.
+        Позиція з v2 каталогу. Повна рецептура ще не додана в базу v11 — скоро розширимо. Поки можна подивитись оригінал на сайті Lesaffre.
       </div>
     `;
   } else {
