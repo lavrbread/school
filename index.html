@@ -387,6 +387,70 @@ html, body {
 }
 .preset-btn:active, .preset-btn.on { background: var(--lsf-black); color: white; }
 
+/* MASS DIALOG — «під вагу тіста» */
+.mass-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.mass-bg.open { opacity: 1; pointer-events: auto; }
+.mass-card {
+  background: white;
+  border-radius: var(--r-lg);
+  width: 100%; max-width: 380px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transform: translateY(16px) scale(0.98);
+  transition: transform .2s ease;
+}
+.mass-bg.open .mass-card { transform: translateY(0) scale(1); }
+.mass-title {
+  font-size: 16px; font-weight: 700; color: var(--lsf-black);
+  margin: 0 0 4px;
+}
+.mass-sub {
+  font-size: 12px; color: var(--lsf-muted);
+  margin-bottom: 14px;
+}
+.mass-presets {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+  margin-bottom: 12px;
+}
+.mass-preset {
+  padding: 10px 0; font-size: 13px; font-weight: 600;
+  background: var(--lsf-warm); color: var(--lsf-ink);
+  border: 1px solid var(--lsf-line); border-radius: var(--r-sm);
+  cursor: pointer; font-family: inherit;
+}
+.mass-preset:active, .mass-preset.on { background: var(--lsf-red); color: white; border-color: var(--lsf-red); }
+.mass-input-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.mass-input {
+  flex: 1; padding: 10px 12px; font-size: 15px;
+  border: 1px solid var(--lsf-line-strong); border-radius: var(--r-sm);
+  font-family: inherit; background: white; color: var(--lsf-ink);
+  outline: none;
+}
+.mass-input:focus { border-color: var(--lsf-red); }
+.mass-unit { font-size: 13px; color: var(--lsf-muted); }
+.mass-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+.mass-btn {
+  padding: 10px 16px; font-size: 14px; font-weight: 600;
+  border: none; border-radius: var(--r-sm);
+  cursor: pointer; font-family: inherit;
+}
+.mass-btn.cancel { background: var(--lsf-warm); color: var(--lsf-ink); }
+.mass-btn.ok { background: var(--lsf-red); color: white; }
+.mass-btn.ok:disabled { background: var(--lsf-line-strong); cursor: not-allowed; }
+
 /* SECTIONS */
 .sec {
   background: white;
@@ -912,6 +976,29 @@ html, body {
 
 <div class="toast" id="toast"></div>
 
+<!-- MASS DIALOG -->
+<div class="mass-bg" id="mass-bg">
+  <div class="mass-card">
+    <div class="mass-title">На яку вагу тіста розрахувати?</div>
+    <div class="mass-sub" id="mass-sub"></div>
+    <div class="mass-presets" id="mass-presets">
+      <button class="mass-preset" data-mass="1000">1 кг</button>
+      <button class="mass-preset" data-mass="2000">2 кг</button>
+      <button class="mass-preset" data-mass="5000">5 кг</button>
+      <button class="mass-preset" data-mass="8000">8 кг</button>
+      <button class="mass-preset" data-mass="10000">10 кг</button>
+    </div>
+    <div class="mass-input-row">
+      <input type="number" class="mass-input" id="mass-input" placeholder="Або своє значення" step="50" min="50">
+      <span class="mass-unit">г</span>
+    </div>
+    <div class="mass-actions">
+      <button class="mass-btn cancel" id="mass-cancel">Скасувати</button>
+      <button class="mass-btn ok" id="mass-ok">Перерахувати</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================================
 // DATA
@@ -950,7 +1037,7 @@ const PROC_LABELS = {
 const ITEMS = [
   // ПШЕНИЧНЫЕ
   {n:"Хлеб «Бокатто»", c:["wheat","sourdough","multigrain"], s:"xleb-bokatto",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Bokatto-.jpg",
+    i:"./img/xleb-bokatto.jpg",
     t:["заварка","Аром левен","семечки 20%"],
     r:{
       ing:[
@@ -969,7 +1056,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® голубой","Livendo® «Аром левен»"]
     }},
   {n:"Хлеб «Рустик»", c:["wheat","sourdough"], s:"rustik-na-arom-levene",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/Rustik-.jpg",
+    i:"./img/rustik-na-arom-levene.jpg",
     t:["закваска Livendo","холодная ферментация 15ч","квадратная форма"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:78,p:78},{n:"Соль",g:2,p:2},
@@ -983,7 +1070,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® голубой","Livendo® «Аром левен»"]
     }},
   {n:"Хлеб «Брие»", c:["wheat","butter"], s:"xleb-brie",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Brie-.jpg",
+    i:"./img/xleb-brie.jpg",
     t:["опара 15ч","сливочное масло","французский"],
     r:{
       ing:[{n:"Мука (опара 60 + тесто 40)",g:100,p:100},{n:"Вода",g:65,p:65},{n:"Соль",g:1.8,p:1.8},
@@ -997,7 +1084,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® зелёный"]
     }},
   {n:"Хлеб на кефире «Домашний»", c:["wheat","sandwich"], s:"xleb-na-kefire-domashnij",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/leb-na-kefire-domashniy.jpg",
+    i:"./img/xleb-na-kefire-domashnij.jpg",
     t:["кефир 37%","опара","деревенский"],
     r:{
       ing:[{n:"Мука (опара 50 + тесто 50)",g:100,p:100},{n:"Вода (опара 30 + тесто 1)",g:31,p:31},
@@ -1012,7 +1099,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® зелёный"]
     }},
   {n:"Пампушки українські", c:["wheat","sandwich"], s:"pampushki-ukrainskie",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/pampushki-ukrainskie-.jpg",
+    i:"./img/pampushki-ukrainskie.jpg",
     t:["опара","чеснок","к борщу"],
     r:{
       ing:[{n:"Мука (опара 40 + тесто 60)",g:100,p:100},{n:"Вода",g:58,p:58},{n:"Соль",g:2,p:2},
@@ -1028,7 +1115,7 @@ const ITEMS = [
 
   // РЖАНО-ПШЕНИЧНЫЕ
   {n:"Хлеб «Бородинский»", c:["rye","custard"], s:"xleb-borodinskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/TA-TB-_2-672x372.jpg",
+    i:"./img/xleb-borodinskij.jpg",
     t:["заварка","кориандр","классический"],
     r:{
       ing:[{n:"Заварная паста Inventis® «Рижская тёмная»",g:40,p:40,l:1},
@@ -1042,7 +1129,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Рижская тёмная»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Хлеб «Белорусский»", c:["rye","custard","sourdough"], s:"xleb-belorusskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/Hleb-Belorusskj-1.jpg",
+    i:"./img/xleb-belorusskij.jpg",
     t:["заварка","тмин","закваска Livendo"],
     r:{
       ing:[{n:"Мука пшеничная в/с (в тесте)",g:40,p:40},{n:"Мука ржаная",g:60,p:60},
@@ -1060,7 +1147,7 @@ const ITEMS = [
 
   // ЧИАБАТТА / НА ЗАКВАСКЕ
   {n:"Чиабатта маисовая", c:["wheat","multigrain","custard"], s:"chiabatta-maisovaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/12/CHiabatta-maisovaya.jpg",
+    i:"./img/chiabatta-maisovaya.jpg",
     t:["Inventis","кукуруза"],
     r:{
       ing:[{n:"Заварная паста Inventis® «Маисовая»",g:30,p:30,l:1},
@@ -1073,7 +1160,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Маисовая»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Чиабатта на закваске", c:["sourdough","wheat"], s:"chiabatta-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/05/CHiabatta-na-zakvaske_kraft-min.jpg",
+    i:"./img/chiabatta-na-zakvaske.jpg",
     t:["LV1","холодная расстойка","крафт"],
     r:{
       ing:[{n:"Мука (закваска 20 + тесто 80)",g:100,p:100},
@@ -1089,7 +1176,7 @@ const ITEMS = [
       prod:["Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Чиабатта (классическая)", c:["wheat"], s:"chiabatta",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/8.jpg",
+    i:"./img/chiabatta.jpg",
     t:["замороженный п/ф","классика"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:82,p:82},{n:"Соль",g:2.2,p:2.2},
@@ -1106,7 +1193,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Тейк-н-бейк» Универсальный"]
     }},
   {n:"Хлеб Чиабатта «Экстра темная»", c:["sourdough","sandwich","wheat"], s:"xleb-chiabatta-ekstra-temnaia",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/07/xleb-chiabatta-ekstra-temnaia-07-24.jpg",
+    i:"./img/xleb-chiabatta-ekstra-temnaia.jpg",
     t:["Livendo Аром левен экстратёмный","тёмный без солода","кориандр","вода+лёд 80/20"],
     r:{
       ing:[
@@ -1135,7 +1222,7 @@ const ITEMS = [
 
   // ПЛОСКИЕ
   {n:"Лаваш", c:["flat","wheat"], s:"lavash",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/10/Lavash.jpg",
+    i:"./img/lavash.jpg",
     t:["бига 24ч","массовый","тандыр"],
     r:{
       ing:[{n:"Мука (бига 50 + тесто 50)",g:100,p:100},
@@ -1151,7 +1238,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","RS 190 star"]
     }},
   {n:"Лепёшка итальянская «Фокаччо»", c:["wheat","flat","sourdough"], s:"lepeshka-fokachcho",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Fokachcho-.jpg",
+    i:"./img/lepeshka-fokachcho.jpg",
     t:["Аром левен тёмный","оливковое масло","классика"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:55,p:55},{n:"Соль",g:2,p:2},
@@ -1167,7 +1254,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен тёмный»","Magimix® зелёный"]
     }},
   {n:"Багет", c:["wheat"], s:"baget",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/04/baget.jpg",
+    i:"./img/baget.jpg",
     t:["замороженный п/ф","классика"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:65,p:65},
@@ -1184,7 +1271,7 @@ const ITEMS = [
 
   // СЭНДВИЧ/ТОСТОВЫЕ
   {n:"Хлеб тостовый «Американский»", c:["wheat","sandwich"], s:"tostovyj-xleb-amerikanskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/tostovyiy-amerikanskiy-hleb-.jpg",
+    i:"./img/tostovyj-xleb-amerikanskij.jpg",
     t:["опара 4ч","Pullman","сахар 8%"],
     r:{
       ing:[{n:"Мука (опара 70 + тесто 30)",g:100,p:100},
@@ -1202,7 +1289,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® синий «Тостовый+гамбургер»"]
     }},
   {n:"Хлеб тостовый на закваске", c:["wheat","sandwich","sourdough"], s:"xleb-tostovyj-bezdrozhzhevoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/tostovyiy-bezdrozhzhevoy.jpg",
+    i:"./img/xleb-tostovyj-bezdrozhzhevoj.jpg",
     t:["LV1","без дрожжей в тесте","14-16ч закваска"],
     r:{
       ing:[{n:"Мука (закваска 50 + тесто 50)",g:100,p:100},
@@ -1220,7 +1307,7 @@ const ITEMS = [
       prod:["Livendo® LV1","Magimix® белый","Magimix® фиолетовый"]
     }},
   {n:"Булочка «Пикник Актив»", c:["sandwich","multigrain","custard"], s:"bulochka-piknik-aktiv",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/10/bulochka-piknik-aktiv.jpg",
+    i:"./img/bulochka-piknik-aktiv.jpg",
     t:["Актимикс","паприка","быстрая"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:95,p:95},{n:"Вода",g:53,p:53},
@@ -1233,7 +1320,7 @@ const ITEMS = [
       prod:["Inventis® «Актимикс-семена и паприка»","Прессованные дрожжи «Рекорд» синие"]
     }},
   {n:"Хлеб «Картофельный»", c:["wheat","multigrain"], s:"xleb-kartofelnyj-s-lukom",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/kartofelnyiy-.jpg",
+    i:"./img/xleb-kartofelnyj-s-lukom.jpg",
     t:["картофельные хлопья 20%","лук жареный"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:80,p:80},{n:"Картофельные хлопья",g:20,p:20},
@@ -1251,7 +1338,7 @@ const ITEMS = [
 
   // СДОБА
   {n:"Плюшка здобна", c:["butter","pastry"], s:"plyushka-moskovskaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/04/Plyushka-Moskovskaya.jpg",
+    i:"./img/plyushka-moskovskaya.jpg",
     t:["замороженный п/ф","рулет","сахар сверху"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода/лёд (80/20)",g:45,p:45},
@@ -1267,7 +1354,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» «Фрост»","Magimix® «Тейк-н-бейк» Универсальный"]
     }},
   {n:"Сдоба «Фигурная»", c:["butter","festive"], s:"sdoba-figurnaya-2",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/sdoba-figurnaya.jpg",
+    i:"./img/sdoba-figurnaya-2.jpg",
     t:["фигурное формование","Magimix золотой"],
     r:{
       ing:[{n:"Мука пшеничная",g:100,p:100},{n:"Вода",g:32,p:32},
@@ -1283,7 +1370,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® золотой"]
     }},
   {n:"Сдоба «Куглоф сладкий»", c:["butter","festive"], s:"kuglof-sladkij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Kuglof-sladkiy-.jpg",
+    i:"./img/kuglof-sladkij.jpg",
     t:["эльзасская","изюм","форма-кольцо"],
     r:{
       ing:[{n:"Мука (опара 25 + тесто 75)",g:100,p:100},{n:"Яйцо",g:30,p:30},
@@ -1303,7 +1390,7 @@ const ITEMS = [
 
   // СЛОЁНЫЕ
   {n:"Улитка с заварным кремом и изюмом", c:["pastry","butter"], s:"ulitka-s-zavarnym-kremom-i-izyumom",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/04/Ulitka.jpg",
+    i:"./img/ulitka-s-zavarnym-kremom-i-izyumom.jpg",
     t:["замороженный п/ф","Тейк-н-бейк","заварной крем","изюм"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода (40% лёд + 60% вода)",g:42,p:42},
@@ -1322,7 +1409,7 @@ const ITEMS = [
 
   // ПАСКИ + РОЖДЕСТВЕНСКИЕ
   {n:"Паска «Ніжна»", c:["festive","butter"], s:"kulich-pasxalnyj-nezhnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/09/Kulich-nezhnyj.jpg",
+    i:"./img/kulich-pasxalnyj-nezhnyj.jpg",
     t:["изюм","Inventis Софт Крема","классика"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:40,p:40},{n:"Соль",g:1,p:1},
@@ -1338,7 +1425,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт Крема»"]
     }},
   {n:"Панеттоне", c:["festive","butter","sourdough"], s:"panetonne",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Panetonne-.jpg",
+    i:"./img/panetonne.jpg",
     t:["LV4","цукаты","длинная ферментация"],
     r:{
       ing:[{n:"Мука сильная (опара 50 + тесто 50)",g:100,p:100},{n:"Вода",g:30,p:30},
@@ -1359,7 +1446,7 @@ const ITEMS = [
 
   // БОНУС / v5-DRAFT
   {n:"Хлеб заварной «Пражский»", c:["rye","custard","sourdough"], s:"xleb-prazhskij-zavarnoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Prazhskiy-zavarnoy-.jpg",
+    i:"./img/xleb-prazhskij-zavarnoj.jpg",
     t:["заварка+опара+закваска","Magimix AM 301","классика"],
     r:{
       ing:[{n:"Мука ржаная обдирная",g:60,p:60},{n:"Мука пшеничная в/с",g:40,p:40},
@@ -1375,7 +1462,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен тёмный»","Magimix® AM 301"]
     }},
   {n:"Хлеб пшеничный «Крафт»", c:["wheat","sourdough"], s:"xleb-pshenichnyj-kraft",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/09/Pshenichnyj-kraft.jpg-min.jpg",
+    i:"./img/xleb-pshenichnyj-kraft.jpg",
     t:["ремесленный","крупные поры","Magimix Крафт","на закваске"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:72,p:72},
@@ -1390,7 +1477,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен»","Magimix® «Крафт»"]
     }},
   {n:"Тостовый «Экстра темный»", c:["sandwich","sourdough"], s:"tostovyi-xleb-extra-temnyi",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/07/tostovyi-xleb-extra-temnyi-07-24.jpg",
+    i:"./img/tostovyi-xleb-extra-temnyi.jpg",
     t:["Аром левен экстратёмный","без солода","форма Pullman"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:60,p:60},{n:"Соль",g:1.8,p:1.8},
@@ -1407,7 +1494,7 @@ const ITEMS = [
 
   // SHELL-Ы и позиции с рецептами
   {n:"Хлеб «Паве»", c:["wheat","sourdough","rye"], s:"xleb-pave",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pave-.jpg",
+    i:"./img/xleb-pave.jpg",
     t:["закваска LV1","ржаная обдирная 6%","бережная разделка","240°C"],
     r:{
       ing:[
@@ -1434,7 +1521,7 @@ const ITEMS = [
       prod:["Стартовая культура Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Пен Биер»", c:["wheat","sourdough","rye","custard"], s:"xleb-pen-bier",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pe`n-bier-.jpg",
+    i:"./img/xleb-pen-bier.jpg",
     t:["закваска LV1","пиво тёмное 50%","отделка Тигра","ржаная обдирная 18%","солод ферм."],
     r:{
       ing:[
@@ -1466,7 +1553,7 @@ const ITEMS = [
       prod:["Стартовая культура Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Гречишный с луком»", c:["wheat","multigrain"], s:"grechishnyj-xleb-s-lukom",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/grechishnyiy-s-lukom-.jpg",
+    i:"./img/grechishnyj-xleb-s-lukom.jpg",
     t:["гречка","жареный лук","заварка","ржано-пшеничный"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с)",g:50,p:50},
@@ -1490,7 +1577,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® оранжевый"]
     }},
   {n:"Хлеб «Луковый»", c:["wheat","rye"], s:"lukovyj-xleb",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Lukovyiy-hleb-.jpg",
+    i:"./img/lukovyj-xleb.jpg",
     t:["ржаная обдирная 20%","лук сушёный жареный 5%","укроп опц.","Magimix Ибис + фиолетовый"],
     r:{
       ing:[
@@ -1519,7 +1606,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® фиолетовый «Слойка+бриошь»"]
     }},
   {n:"Хлеб «Тоскано»", c:["wheat","rye","custard","sourdough"], s:"xleb-toskano",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Toskano-.jpg",
+    i:"./img/xleb-toskano.jpg",
     t:["итальянский","Аром левен","заварка","опции тмин/кориандр/семечки"],
     r:{
       ing:[{n:"Мука пшеничная в/с (тесто)",g:84,p:84},
@@ -1540,7 +1627,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен»","Magimix® голубой"]
     }},
   {n:"Хлеб «Деревенский»", c:["wheat","custard"], s:"xleb-derevenskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/07/Hleb-Derevenskiy.jpg",
+    i:"./img/xleb-derevenskij.jpg",
     t:["Inventis Белорусская светлая","индустриальный","750 г","быстрый 2ч"],
     r:{
       ing:[{n:"Мука пшеничная",g:80,p:80},
@@ -1555,7 +1642,7 @@ const ITEMS = [
       prod:["Inventis® «Белорусская светлая»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Хлеб «Солодовый»", c:["wheat","rye","custard"], s:"xleb-solodovyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Hleb-Solodovyiy-.jpg",
+    i:"./img/xleb-solodovyj.jpg",
     t:["заварка","ржаной солод","отделка Тигра","опц. изюм/кориандр"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:80,p:80},
@@ -1580,7 +1667,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® фиолетовый"]
     }},
   {n:"Хлеб «Карельский экстра»", c:["rye","custard"], s:"xleb-karelskij-ekstra",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/TA-TMTB-_TN-TBTVTA-_2-672x372.jpg",
+    i:"./img/xleb-karelskij-ekstra.jpg",
     t:["заварка","изюм","анис","патока","Inventis Рижская тёмная"],
     r:{
       ing:[{n:"Заварная паста Inventis® «Рижская тёмная»",g:40,p:40,l:1},
@@ -1594,7 +1681,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Рижская тёмная»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Хлеб «Стокгольмский»", c:["rye","custard"], s:"xleb-stokgolmskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/Hleb-Stokgolmskij.jpg",
+    i:"./img/xleb-stokgolmskij.jpg",
     t:["заварка","тмин","солод","социальный ассортимент"],
     r:{
       ing:[{n:"Мука пшеничная в/с (в тесте)",g:50,p:50},
@@ -1614,7 +1701,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Хлеб «Яровой заварной»", c:["rye","custard","wheat","multigrain"], s:"xleb-yarovoj-zavarnoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/yarovoy-zavarnoy-.jpg",
+    i:"./img/xleb-yarovoj-zavarnoj.jpg",
     t:["заварка","опара","семена","отделка Тигра","солод"],
     r:{
       ing:[{n:"Мука пшеничная 1 с (заварка 5 + опара 40 + тесто 50)",g:95,p:95},
@@ -1639,7 +1726,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® голубой","Magimix® PRO 404"]
     }},
   {n:"Хлеб «Рожь»", c:["rye","custard","multigrain"], s:"xleb-rozh",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/Hleb-Rozh-1.jpg",
+    i:"./img/xleb-rozh.jpg",
     t:["заварка","ржаные хлопья","солод","социальный ассортимент"],
     r:{
       ing:[{n:"Мука пшеничная в/с (тесто)",g:49,p:49},
@@ -1660,7 +1747,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Чиабатта безопарный способ", c:["wheat","sourdough"], s:"chiabatta-bezoparnyj-sposob",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/chiabatta-bezoparnyiy-sposob-.jpg",
+    i:"./img/chiabatta-bezoparnyj-sposob.jpg",
     t:["Аром левен","безопарный","быстрый"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:82,p:82},{n:"Соль",g:2.5,p:2.5},
@@ -1675,7 +1762,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Чиабатта артизан", c:["wheat","custard"], s:"chiabatta-artizan",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/TZ-TVTV-_-TATV-_2-672x372.jpg",
+    i:"./img/chiabatta-artizan.jpg",
     t:["Inventis Белорусская светлая","артизан"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:94,p:94},
@@ -1691,7 +1778,7 @@ const ITEMS = [
       prod:["Inventis® «Белорусская светлая»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Чиабатта «Яровая»", c:["wheat","custard"], s:"chiabatta-yarovaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/10.jpg",
+    i:"./img/chiabatta-yarovaya.jpg",
     t:["замороженный п/ф","заварка","солод"],
     r:{
       ing:[{n:"Мука пшеничная в/с (заварка 5 + тесто 90)",g:95,p:95},
@@ -1711,7 +1798,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен»","Прессованные дрожжи «Рекорд» красные","Magimix® «Тейк-н-бейк» Универсальный"]
     }},
   {n:"Чиабатта ржаная", c:["rye","sourdough","wheat"], s:"chiabata-rzhanaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/CHiabatta-rzhanaya.jpg",
+    i:"./img/chiabata-rzhanaya.jpg",
     t:["ржано-пшеничный","Аром левен тёмный"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:85,p:85},
@@ -1731,7 +1818,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен тёмный»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Чиабатта с полбой", c:["multigrain","wheat","custard","sourdough"], s:"chiabatta-s-polboj",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/03/CHiabatta-s-polboj-min.jpg",
+    i:"./img/chiabatta-s-polboj.jpg",
     t:["полба","Соургрейн","холодная расстойка 15ч"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:88,p:88},{n:"Вода",g:65,p:65},
@@ -1750,7 +1837,7 @@ const ITEMS = [
       prod:["Livendo® «Соургрейн Полба»","Livendo® «Аром левен»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Чиабатта на пулише", c:["wheat"], s:"chiabatta-na-pulishe",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/8-1.jpg",
+    i:"./img/chiabatta-na-pulishe.jpg",
     t:["замороженный п/ф","пулиш 12-14ч"],
     r:{
       ing:[{n:"Мука (пулиш 30 + тесто 70)",g:100,p:100},
@@ -1770,7 +1857,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Тейк-н-бейк» Универсальный"]
     }},
   {n:"Лепёшка арабская «Пита»", c:["flat","wheat","sandwich"], s:"pita",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pita-.jpg",
+    i:"./img/pita.jpg",
     t:["карманная","высокая температура 450–600°C","дезактив. дрожжи","20 сек выпечка"],
     r:{
       ing:[
@@ -1796,7 +1883,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Дезактивированные дрожжи Baker's Bonus® «RS 190 Star»"]
     }},
   {n:"Лаваш «Крэм-Руаяль» на кефире", c:["flat","wheat","sandwich"], s:"lavash-krem-ruayal-na-kefire",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/lavash-na-kefire-.jpg",
+    i:"./img/lavash-krem-ruayal-na-kefire.jpg",
     t:["кефир 40%","мучная суспензия","рельеф линейкой","кунжут/сыр"],
     r:{
       ing:[
@@ -1824,7 +1911,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® голубой «Заморозка+чиабатта»"]
     }},
   {n:"Тортилья", c:["flat","sandwich","wheat"], s:"tortilia",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/05/uluchshitel-inventis-tortilia.jpg",
+    i:"./img/tortilia.jpg",
     t:["индустр.","горячий пресс","Inventis Тортилья","глицерин"],
     r:{
       ing:[
@@ -1849,7 +1936,7 @@ const ITEMS = [
       prod:["Улучшитель Inventis® «Тортилья»"]
     }},
   {n:"Булочка для гамбургера", c:["sandwich","wheat"], s:"bulochka-dlya-gamburgera",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/bulochka-dlya-gamburgera-.jpg",
+    i:"./img/bulochka-dlya-gamburgera.jpg",
     t:["опара 4ч","кунжут","классика","Magimix Софт гамбургер банс"],
     r:{
       ing:[
@@ -1880,7 +1967,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Сухие дезактивированные дрожжи «RS 190 star»","Magimix® «Софт гамбургер банс»"]
     }},
   {n:"Бриошь «Пасадо»", c:["butter","festive","pastry"], s:"briosh-pasado",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pasado-.jpg",
+    i:"./img/briosh-pasado.jpg",
     t:["пулиш 12-18ч","холодная расстойка","сливки","сахар сверху"],
     r:{
       ing:[{n:"Мука (пулиш 20 + тесто 80)",g:100,p:100},{n:"Яйцо",g:50,p:50},
@@ -1900,7 +1987,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый"]
     }},
   {n:"Бриошь «Северная»", c:["butter","festive"], s:"briosh-severnaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Briosh-severnaya-.jpg",
+    i:"./img/briosh-severnaya.jpg",
     t:["крупный сахар","ореховая отделка","миндаль"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:30,p:30},{n:"Соль",g:2,p:2},
@@ -1921,7 +2008,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый"]
     }},
   {n:"Бриошь «Лимонная»", c:["butter","festive"], s:"briosh-limonnaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/briosh-limonnaya-.jpg",
+    i:"./img/briosh-limonnaya.jpg",
     t:["лимонные цукаты","ром","термосахар","косичка"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Молоко цельное",g:20,p:20},
@@ -1940,7 +2027,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый"]
     }},
   {n:"Бриошь «Ромовая»", c:["butter","festive"], s:"romovaya-briosh",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Romovaya-briosh-.jpg",
+    i:"./img/romovaya-briosh.jpg",
     t:["опара","ром","пропитка","помадка","изюм"],
     r:{
       ing:[{n:"Мука (опара 50 + тесто 50)",g:100,p:100},
@@ -1968,7 +2055,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый","Magimix® белый"]
     }},
   {n:"Булочки «Кресты»", c:["butter","festive"], s:"bulochka-kresty",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/11/Bulochki-kresty.jpg",
+    i:"./img/bulochka-kresty.jpg",
     t:["hot cross buns","изюм","лимон","пряности","2 теста"],
     r:{
       ing:[{n:"Мука (тесто 100 + отделка 12,5)",g:112.5,p:112.5},
@@ -1991,7 +2078,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт сдоба»"]
     }},
   {n:"Рожок обсыпной", c:["butter","sandwich"], s:"rozhok-obsypnoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/10/Rozhok-obsypnoj.jpg",
+    i:"./img/rozhok-obsypnoj.jpg",
     t:["штрейзель","Inventis Софт лимон","социальный ассортимент"],
     r:{
       ing:[{n:"Мука (крошка 3 + тесто 100)",g:103,p:103},
@@ -2011,7 +2098,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт лимон»"]
     }},
   {n:"Бретцель", c:["wheat","flat"], s:"bretcel",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/07/Bretczel.jpg",
+    i:"./img/bretcel.jpg",
     t:["немецкий крендель","каустическая сода","к пиву"],
     r:{
       ing:[{n:"Мука пшеничная",g:100,p:100},{n:"Вода+лёд (50/50)",g:54,p:54},
@@ -2028,7 +2115,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Пауэр Про»"]
     }},
   {n:"Пастис Ландей", c:["butter","festive"], s:"pastis-landej",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/11/Pastis-Landej.jpg",
+    i:"./img/pastis-landej.jpg",
     t:["опара","анис","французская сдоба","человечки"],
     r:{
       ing:[
@@ -2057,7 +2144,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® белый"]
     }},
   {n:"Кокий", c:["butter","festive"], s:"kokil",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/11/Kokil-1.jpg",
+    i:"./img/kokil.jpg",
     t:["пулиш","кусковой сахар","термосахар"],
     r:{
       ing:[
@@ -2087,7 +2174,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Улучшитель Inventis® «Софт Крема»"]
     }},
   {n:"Ломтики слоєні", c:["pastry","butter"], s:"pechene-sibirskoe",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pechene-sibirskoe-.jpg",
+    i:"./img/pechene-sibirskoe.jpg",
     t:["слойка+песочное","дезактив. дрожжи","комбинированное тесто"],
     r:{
       ing:[
@@ -2114,7 +2201,7 @@ const ITEMS = [
       prod:["Сухие дезактивированные дрожжи «RS 190 star»"]
     }},
   {n:"Рулет с маком", c:["butter","festive"], s:"rulet-s-makom",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Rulet-s-makom.jpg",
+    i:"./img/rulet-s-makom.jpg",
     t:["мак","1 мес хранения","Inventis Софт сдоба","маковая начинка 115%"],
     r:{
       ing:[
@@ -2141,7 +2228,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Улучшитель Inventis® «Софт сдоба»"]
     }},
   {n:"Слойка «Датская»", c:["pastry"], s:"slojka-datskaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/1.jpg",
+    i:"./img/slojka-datskaya.jpg",
     t:["замороженный п/ф","Тейк-н-бейк","55-60 г"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода/лёд (60/40)",g:42,p:42},
@@ -2160,7 +2247,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Тейк-н-бейк» Слойка"]
     }},
   {n:"Слойка з крихтою", c:["pastry","butter","festive"], s:"slojka-sverdlovskaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/09/Slojka-sverdlovskaya.jpg",
+    i:"./img/slojka-sverdlovskaya.jpg",
     t:["опара","штрейзель","конвертик","классический ГОСТ"],
     r:{
       ing:[{n:"Мука (крошка 3 + опара 50 + тесто 47)",g:100,p:100},
@@ -2184,7 +2271,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт Крема»"]
     }},
   {n:"Слойка дрожжевая", c:["pastry","butter"], s:"slojka-drozhzhevaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/sloyka-drozhzhevaya-.jpg",
+    i:"./img/slojka-drozhzhevaya.jpg",
     t:["классическая","AM 501","на масле","2 книжки"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода/лёд 60/40",g:42,p:42},
@@ -2203,7 +2290,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® голубой","Magimix® «АМ 501»"]
     }},
   {n:"Круассан «Традисионель»", c:["pastry","sandwich"], s:"kruassan-tradisionel",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/2.jpg",
+    i:"./img/kruassan-tradisionel.jpg",
     t:["замороженный п/ф","классика","Тейк-н-бейк"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода (40% лёд + 60% вода)",g:42,p:42},
@@ -2221,7 +2308,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» «Фрост»","Magimix® «Тейк-н-бейк» Слойка"]
     }},
   {n:"Круассан на пулише", c:["pastry","sandwich"], s:"kruassan-na-pulishe",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/3.jpg",
+    i:"./img/kruassan-na-pulishe.jpg",
     t:["замороженный п/ф","пулиш 12-16ч","Тейк-н-бейк"],
     r:{
       ing:[{n:"Мука (пулиш 30 + тесто 70)",g:100,p:100},
@@ -2243,7 +2330,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Тейк-н-бейк» Слойка"]
     }},
   {n:"Зерновой круассан", c:["pastry","multigrain","custard"], s:"zernovoj-kruassan",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/TATG-TBTB-TA-_2-672x372.jpg",
+    i:"./img/zernovoj-kruassan.jpg",
     t:["Inventis Мультизерновая","слоёное","мультизерно"],
     r:{
       ing:[{n:"Inventis® «Мультизерновая»",g:40,p:40,l:1},
@@ -2261,7 +2348,7 @@ const ITEMS = [
       prod:["Inventis® «Мультизерновая»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"КРУАССАН «Экстра темный»", c:["pastry","sourdough"], s:"kruassan-extra-temnyi",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/07/kruassan-extra-temnyi-2-07-24.jpg",
+    i:"./img/kruassan-extra-temnyi.jpg",
     t:["Livendo Аром левен экстратёмный","холодная ферментация 15ч"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода/лёд 60/40",g:41,p:41},
@@ -2281,7 +2368,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен экстратёмный»","Прессованные дрожжи «Рекорд» синие","Magimix® «Тейк-н-бейк» Слойка"]
     }},
   {n:"Пен Шоколя", c:["pastry"], s:"pen-shokolya-take-bake",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/03/6.jpg",
+    i:"./img/pen-shokolya-take-bake.jpg",
     t:["замороженный п/ф","шоколад","Тейк-н-бейк"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода (40% лёд + 60% вода)",g:42,p:42},
@@ -2299,7 +2386,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» «Фрост»","Magimix® «Тейк-н-бейк» Слойка"]
     }},
   {n:"Паска «Лимонна»", c:["festive","butter"], s:"kulich-pasxalnyj-limonnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/09/Kulich-_-Limonnyj.jpg",
+    i:"./img/kulich-pasxalnyj-limonnyj.jpg",
     t:["цукаты лимон","Inventis Софт Кулич"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:37,p:37},{n:"Соль",g:1.5,p:1.5},
@@ -2316,7 +2403,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт Кулич»"]
     }},
   {n:"Паска «Пряна»", c:["festive","butter"], s:"kulich-pasxalnyj-pryanyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/02/pryanyj-min.jpg",
+    i:"./img/kulich-pasxalnyj-pryanyj.jpg",
     t:["пряности","цукаты апельсин","изюм","Inventis Софт Кулич"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:35,p:35},
@@ -2336,7 +2423,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт Кулич»"]
     }},
   {n:"Паска преміум «Домашня»", c:["festive","butter"], s:"kulich-pasxalnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Kulich-premium-.jpg",
+    i:"./img/kulich-pasxalnyj.jpg",
     t:["премиум","изюм 50%","Inventis Софт Кулич"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:30,p:30},{n:"Соль",g:1,p:1},
@@ -2353,7 +2440,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Inventis® «Софт Кулич»"]
     }},
   {n:"Штоллен", c:["festive","butter"], s:"rozhdestvenskij-shtollen",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/shtollen-112024.jpg",
+    i:"./img/rozhdestvenskij-shtollen.jpg",
     t:["опара","марципан","миндаль","изюм 60%","пряности"],
     r:{
       ing:[{n:"Мука (опара 50 + тесто 50)",g:100,p:100},
@@ -2378,7 +2465,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый","Magimix® белый"]
     }},
   {n:"Штоллен Ричмонт", c:["festive","butter"], s:"shtollen-richmont",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/shtollen-112024.jpg",
+    i:"./img/shtollen-richmont.jpg",
     t:["премиум","ром","изюм 73%","миндаль","масло 48%"],
     r:{
       ing:[{n:"Мука (опара 39 + тесто 61)",g:100,p:100},
@@ -2408,7 +2495,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® белый"]
     }},
   {n:"Пандоро", c:["festive","butter","sourdough"], s:"keks-pandoro",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/11/keks-pandoro-112024.jpg",
+    i:"./img/keks-pandoro.jpg",
     t:["LV1","без сухофруктов","звёздчатая форма","желток"],
     r:{
       ing:[{n:"Мука в/с (закваска 50 + тесто 50)",g:100,p:100},
@@ -2434,7 +2521,7 @@ const ITEMS = [
       prod:["Livendo® LV1","RS 190 star","Magimix® белый"]
     }},
   {n:"Австрийский Куглоф", c:["festive","butter"], s:"avstrijskij-rozhdestvenskij-kuglof",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/11/kuglof.jpg",
+    i:"./img/avstrijskij-rozhdestvenskij-kuglof.jpg",
     t:["опара","изюм","водка","апельсин","форма короны"],
     r:{
       ing:[{n:"Мука (опара 25 + тесто 75)",g:100,p:100},
@@ -2464,7 +2551,7 @@ const ITEMS = [
 
   // --- Хліб: житньо-пшеничні, заварні, Дарницькі, v5 ---
   {n:"Хлеб «Дарницкий» формовой", c:["rye","sourdough"], s:"xleb-darnickij-formovoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/07/Darniczkij-formovoj.jpg",
+    i:"./img/xleb-darnickij-formovoj.jpg",
     t:["закваска Livendo","формовой","классический"],
     r:{
       ing:[{n:"Мука пшеничная 1 с",g:50,p:50},{n:"Мука ржаная обдирная",g:50,p:50},
@@ -2480,7 +2567,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен тёмный»","Прессованные дрожжи «Рекорд» красные","Magimix® оранжевый"]
     }},
   {n:"Хлеб «Дарницкий» подовый", c:["rye","sourdough"], s:"xleb-darnickij-podovyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/Darniczkij_podovyj.jpg",
+    i:"./img/xleb-darnickij-podovyj.jpg",
     t:["закваска Livendo","подовый","крафт"],
     r:{
       ing:[{n:"Мука пшеничная 1 с",g:50,p:50},{n:"Мука ржаная обдирная",g:50,p:50},
@@ -2496,7 +2583,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен тёмный»","Прессованные дрожжи «Рекорд» красные","Magimix® оранжевый"]
     }},
   {n:"Хлеб «Дарницкий новый»", c:["rye","sourdough"], s:"xleb-darnickij-novyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/09/Reczeptura_darniczkij_novyj.jpg",
+    i:"./img/xleb-darnickij-novyj.jpg",
     t:["LV4","закваска 16ч","обновлённый"],
     r:{
       ing:[{n:"Мука пшеничная в/с (тесто)",g:40,p:40},
@@ -2514,7 +2601,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® LV4","Magimix® голубой"]
     }},
   {n:"Хлеб заливной «Экстра тёмный» с подсолнечником", c:["sourdough","multigrain","rye"], s:"xleb-zalivnoi-ekstra-temnyi-s-podsolnechnikom",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/07/2-tostovyi-xleb-extra-temnyi-07-24-02.jpg",
+    i:"./img/xleb-zalivnoi-ekstra-temnyi-s-podsolnechnikom.jpg",
     t:["Livendo Аром левен экстратёмный","Inventis Рижская 30%","ржаная обдирная 30%","семечки 20%","формовой"],
     r:{
       ing:[
@@ -2542,7 +2629,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Рижская»","Livendo® «Аром левен экстратёмный»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Пен-о-левен» на закваске", c:["sourdough","wheat"], s:"xleb-peno-leven-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/05/HLEB-PEN-O-LEVEN_-NA-ZAKVASKE-min.jpg",
+    i:"./img/xleb-peno-leven-na-zakvaske.jpg",
     t:["Livendo LV1","закваска 20–24 ч","Magimix Крафт","крупнопористая структура","650 г"],
     r:{
       ing:[
@@ -2569,7 +2656,7 @@ const ITEMS = [
       prod:["Стартовая культура Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Хлеб «Пен-о-левен» с льном и морковью", c:["sourdough","multigrain","wheat"], s:"xleb-peno-leven-na-zakvaske-len-i-morkov",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/05/HLEB-PEN-O-LEVEN-NA-ZAKVASKE-Len-i-Morkov_kraft.jpg",
+    i:"./img/xleb-peno-leven-na-zakvaske-len-i-morkov.jpg",
     t:["Livendo LV1","замочка лён+морковь 2-3ч","цельносмолотая 10%","Magimix Крафт","крупнопористая"],
     r:{
       ing:[
@@ -2599,7 +2686,7 @@ const ITEMS = [
       prod:["Стартовая культура Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Хлеб заварной с полбой", c:["custard","multigrain","wheat"], s:"xleb-zavarnoj-s-polboj",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/03/Hleb-zavarnoj-s-polboj-min.jpg",
+    i:"./img/xleb-zavarnoj-s-polboj.jpg",
     t:["полба","заварка","Livendo Соургрейн"],
     r:{
       ing:[{n:"Мука пшеничная в/с (или 1с)",g:90,p:90},
@@ -2618,7 +2705,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Полба»","Прессованные дрожжи «Рекорд» красные","Magimix® зелёный"]
     }},
   {n:"Хлеб «Пен Левен» медовый", c:["sourdough","wheat"], s:"xleb-na-zakvaske-pen-leven-medovyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pe`n-leven-medovyiy-.jpg",
+    i:"./img/xleb-na-zakvaske-pen-leven-medovyj.jpg",
     t:["LV1","пшеничный","отруби","длительная расстойка"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с) — закваска 20 + тесто 75",g:95,p:95},
@@ -2641,7 +2728,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® LV1 (стартовая культура)","Magimix® фиолетовый"]
     }},
   {n:"Хлеб «Полбяной»", c:["multigrain","wheat","custard"], s:"xleb-polbyanoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/03/Hleb-polbyanoj-min.jpg",
+    i:"./img/xleb-polbyanoj.jpg",
     t:["Livendo Соургрейн Полба 40%","ржаная обдирная 10%","форма из лозы","Magimix зелёный"],
     r:{
       ing:[
@@ -2667,7 +2754,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Полба»","Прессованные дрожжи «Рекорд» красные","Magimix® зелёный «Ослабление клейковины»"]
     }},
   {n:"Хлеб овсяный крафтовый", c:["multigrain","wheat","sourdough"], s:"xleb-ovsyanyj-kraftovyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/12/hleb-ovsyanyj-kraftovyj.jpg",
+    i:"./img/xleb-ovsyanyj-kraftovyj.jpg",
     t:["овёс","крафт","Inventis Овсяная","крупное деление"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с)",g:89,p:89},
@@ -2686,7 +2773,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Овсяная»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Хлеб солодовый с семечкой на закваске", c:["sourdough","multigrain","rye"], s:"xleb-solodovyj-s-semechkoj-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/08/solodovyj-min.jpg",
+    i:"./img/xleb-solodovyj-s-semechkoj-na-zakvaske.jpg",
     t:["Livendo LV5","закваска 16-20ч","Inventis Рижская тёмная 20%","замочка семечки","овальная форма 560г"],
     r:{
       ing:[
@@ -2713,7 +2800,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Рижская тёмная»","Стартовая культура Livendo® LV5","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Альпийский» на закваске", c:["sourdough","wheat"], s:"xleb-alpijskij-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Alpiyskiy-.jpg",
+    i:"./img/xleb-alpijskij-na-zakvaske.jpg",
     t:["LV4","альпийский","заварка","солод","семена"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с) — в тесто",g:60,p:60},
@@ -2741,7 +2828,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® LV4 (стартовая культура)","Magimix® голубой"]
     }},
   {n:"Хлеб маисовый на закваске", c:["sourdough","multigrain"], s:"xleb-maisovyj-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/08/maisovyj-min.jpg",
+    i:"./img/xleb-maisovyj-na-zakvaske.jpg",
     t:["Livendo LV5","закваска","Inventis Маисовая 40%","кукуруза","овальная форма 560г"],
     r:{
       ing:[
@@ -2766,7 +2853,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Маисовая»","Стартовая культура Livendo® LV5","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Панини»", c:["wheat","sandwich","flat"], s:"xleb-panini",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/panini-.jpg",
+    i:"./img/xleb-panini.jpg",
     t:["итальянский","расплющенный полубагет 70×180×4","дезактив. дрожжи","оливковое масло"],
     r:{
       ing:[
@@ -2794,7 +2881,7 @@ const ITEMS = [
 
   // --- Хліб: пшеничні з включеннями, батони ---
   {n:"Хлеб «Тартин Прованс»", c:["wheat","custard","multigrain"], s:"xleb-tartin-provans",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/10/xleb-tartin-provans.jpg",
+    i:"./img/xleb-tartin-provans.jpg",
     t:["Inventis Актимикс-семена и паприка","прованские травы","подовый"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:97,p:97},{n:"Вода",g:57,p:57},
@@ -2813,7 +2900,7 @@ const ITEMS = [
       prod:["Inventis® «Актимикс-семена и паприка»","Прессованные дрожжи «Рекорд» красные","Magimix® зелёный"]
     }},
   {n:"Хлеб с тмином и яблоком", c:["rye","custard"], s:"khleb-s-tminom-i-yablokom",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/01/khleb-s-tminom-i-yablokom.jpg",
+    i:"./img/khleb-s-tminom-i-yablokom.jpg",
     t:["Livendo Соургрейн Печёное яблоко","заварная паста 60%","тмин молотый","ржаная обдирная 17,5%"],
     r:{
       ing:[
@@ -2841,7 +2928,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Печёное яблоко»","Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый «Слойка+бриошь»"]
     }},
   {n:"Хлеб «Бородинский» с яблоком", c:["rye","custard"], s:"khleb-borodinskii-s-yablokom",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/01/khleb-borodinskii-s-yablokom.jpg",
+    i:"./img/khleb-borodinskii-s-yablokom.jpg",
     t:["Livendo Соургрейн Печёное яблоко","заварная паста 60%","кориандр","обкатка в отрубях","хороший пар"],
     r:{
       ing:[
@@ -2867,7 +2954,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Печёное яблоко»","Прессованные дрожжи «Рекорд» красные","Magimix® зелёный «Ослабление клейковины»"]
     }},
   {n:"Хлеб «Ржаное кольцо»", c:["rye","custard","sourdough","multigrain"], s:"xleb-rzhanoe-koltco",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/10/xleb-rzhanoe-koltco.jpg",
+    i:"./img/xleb-rzhanoe-koltco.jpg",
     t:["Inventis Актимикс-семена и паприка","Аром левен тёмный","заварка","форма-кольцо","550 г"],
     r:{
       ing:[
@@ -2896,7 +2983,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Актимикс-семена и паприка»","Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен тёмный»","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Хлеб «Ремесленный» с пророщенным зерном", c:["custard","multigrain","sourdough","wheat"], s:"xleb-remeslennyj-s-proroshhennym-zernom-2",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/10/Remeslennyj-prorosshhenym-zernom.jpg.jpg",
+    i:"./img/xleb-remeslennyj-s-proroshhennym-zernom-2.jpg",
     t:["Соургрейн Рожь","пророщ. зерно","Magimix Крафт","подовый"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:86.3,p:86.3},
@@ -2915,7 +3002,7 @@ const ITEMS = [
       prod:["Livendo® «Соургрейн Рожь»","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Хлеб «Богатырский»", c:["wheat","multigrain","custard"], s:"xleb-bogatyrskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/hleb-bogatyrskij-s-otrubyami.jpg",
+    i:"./img/xleb-bogatyrskij.jpg",
     t:["отруби 10%","заварка отрубей","социальный ассортимент"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:90,p:90},
@@ -2935,7 +3022,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Хлеб «Мультизерновой»", c:["multigrain","wheat","custard","rye"], s:"xleb-multizernovoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/6L5A3732-as-Smart-Object-1.jpg",
+    i:"./img/xleb-multizernovoj.jpg",
     t:["Inventis Мультизерновая 60%","семена подсолнечника","заварная паста"],
     r:{
       ing:[{n:"Inventis® «Мультизерновая» (заварная паста)",g:60,p:60,l:1},
@@ -2952,7 +3039,7 @@ const ITEMS = [
       prod:["Inventis® «Мультизерновая»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Хлеб «Тирольский с сыром»", c:["wheat","sourdough","multigrain"], s:"xleb-s-syrom-tirolskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/tirolskiy-s-syirom-.jpg",
+    i:"./img/xleb-s-syrom-tirolskij.jpg",
     t:["LV1","кефир 40%","сыр кубиками 20%","отруби","отделка Тигра"],
     r:{
       ing:[{n:"Мука пшеничная в/с (закваска 20 + тесто 75)",g:95,p:95},
@@ -2974,7 +3061,7 @@ const ITEMS = [
       prod:["Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Хлеб «Вулкан»", c:["wheat","sourdough"], s:"xleb-vulkan",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Vulkan-.jpg",
+    i:"./img/xleb-vulkan.jpg",
     t:["Аром левен 3%","шов вверх","посыпка мукой","крафт"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:65,p:65},
@@ -2992,7 +3079,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Хлеб «Пен Патерон» с тыквой", c:["wheat","sourdough","multigrain"], s:"xleb-pen-pateron",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Hleb-Pe%60n-Pateron-.jpg",
+    i:"./img/xleb-pen-pateron.jpg",
     t:["LV1","тыква сушёная + сырая","длинная закваска 20-24ч","лёгкая сдоба"],
     r:{
       ing:[{n:"Мука пшеничная в/с (закваска 50 + тесто 50)",g:100,p:100},
@@ -3017,7 +3104,7 @@ const ITEMS = [
       prod:["Livendo® LV1","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Батон «Горчичный»", c:["wheat","sandwich"], s:"baton-gorchichnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/04/baton-gorchichnyj.jpg",
+    i:"./img/baton-gorchichnyj.jpg",
     t:["горчичное масло 5%","безопарный","350-400 г"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:58,p:58},
@@ -3033,7 +3120,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Батончик «Гречишный»", c:["multigrain","wheat"], s:"batonchik-grechishnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/batonchik-grechishhnyiy-.jpg",
+    i:"./img/batonchik-grechishnyj.jpg",
     t:["мука гречишная 10%","мёд гречишный 7%","Magimix фиолетовый"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с)",g:90,p:90},
@@ -3052,7 +3139,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Батончик «Руаяль прованс»", c:["wheat"], s:"batonchik-ruayal-provans",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/Batonchik-Ruayal-Provans-.jpg",
+    i:"./img/batonchik-ruayal-provans.jpg",
     t:["прованские травы","сыр","майонез"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с)",g:100,p:100},
@@ -3073,7 +3160,7 @@ const ITEMS = [
 
   // --- Тостові, багети, плоскі ---
   {n:"Хлеб тостовый мультизерновой", c:["sandwich","multigrain","custard"], s:"xleb-tostovyj-multizernovoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/11/tostovyiy_multizernovoy.png",
+    i:"./img/xleb-tostovyj-multizernovoj.png",
     t:["Inventis Мультизерновая 40%","заварная паста","Magimix голубой"],
     r:{
       ing:[{n:"Inventis® «Мультизерновая» (заварная паста)",g:40,p:40,l:1},
@@ -3091,7 +3178,7 @@ const ITEMS = [
       prod:["Inventis® «Мультизерновая»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Тостовый хлеб на закваске", c:["sandwich","sourdough"], s:"tostovyj-xleb-na-zakvaske",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/tostovyiy-bezdrozhzhevoy.jpg",
+    i:"./img/tostovyj-xleb-na-zakvaske.jpg",
     t:["LV1","бездрожжевой","длительное брожение"],
     r:{
       ing:[{n:"Мука пшеничная в/с (закваска 50 + тесто 50)",g:100,p:100},
@@ -3116,7 +3203,7 @@ const ITEMS = [
       prod:["Livendo® LV1 (стартовая культура)","Magimix® белый","Magimix® фиолетовый"]
     }},
   {n:"Тостовый «Актимикс» с семенами", c:["sandwich","multigrain","custard"], s:"tostovyi-khleb-aktimiks-s-semenami",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/10/tostovyi-khleb-aktimiks-s-semenami.jpg",
+    i:"./img/tostovyi-khleb-aktimiks-s-semenami.jpg",
     t:["Inventis Актимикс","семена","паприка","Pullman без крышки"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:93,p:93},
@@ -3135,7 +3222,7 @@ const ITEMS = [
       prod:["Inventis® «Актимикс-семена и паприка»","Прессованные дрожжи «Рекорд» красные","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Багет «Венский»", c:["wheat"], s:"baget-venskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Venskiy-baget-.jpg",
+    i:"./img/baget-venskij.jpg",
     t:["венский","сдобный багет","молоко","яйцо"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},
@@ -3157,7 +3244,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Багет на закваске «Французский»", c:["wheat","sourdough"], s:"baget-na-zakvaske-francuzskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/baget-na-zakvaske-Arom-Leven-.jpg",
+    i:"./img/baget-na-zakvaske-francuzskij.jpg",
     t:["закваска Аром левен","классика","150-350 г"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},{n:"Вода",g:56,p:56},
@@ -3172,7 +3259,7 @@ const ITEMS = [
       prod:["Livendo® «Аром левен»","Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Багет индустриальный с пророщенным зерном", c:["wheat","multigrain","sourdough"], s:"baget-industrialnyj-s-proroshhennym-zernom",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/05/Baget-industrialnyj-s-proroshhennym-zernom-sourgrejn-min.jpg",
+    i:"./img/baget-industrialnyj-s-proroshhennym-zernom.jpg",
     t:["Livendo Соургрейн Рожь","пророщ. зерно","крафт"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:93.3,p:93.3},
@@ -3190,7 +3277,7 @@ const ITEMS = [
       prod:["Livendo® «Соургрейн Рожь»","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Лепёшка «Скандинавская»", c:["flat","wheat"], s:"lepeshka-skandinavskaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/lepeshka_skandinavskaya.jpg",
+    i:"./img/lepeshka-skandinavskaya.jpg",
     t:["скандинавская","тонкая","быстрая выпечка","разрыхлитель"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},
@@ -3213,7 +3300,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Baker's Bonus® «RS 190 star»","Magimix® белый"]
     }},
   {n:"Лаваш маисовый", c:["flat","multigrain"], s:"lavash-maisovyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/12/Lavash-maisovyj-s-syrom.jpg",
+    i:"./img/lavash-maisovyj.jpg",
     t:["кукуруза","сыр","Inventis Маисовая"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:95,p:95},
@@ -3234,7 +3321,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Маисовая»","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Фокачча с паприкой", c:["wheat","flat"], s:"fokachcho-s-paprikoi",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/10/fokachcho-s-paprikoi.jpg",
+    i:"./img/fokachcho-s-paprikoi.jpg",
     t:["паприка","заварная паста","базилик"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},
@@ -3253,7 +3340,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Актимикс – семена и паприка»","Прессованные дрожжи «Рекорд» красные","Magimix® зелёный"]
     }},
   {n:"Плетёнка", c:["butter","wheat","sandwich"], s:"pletenka",
-    i:"https://lesaffre.ru/wp-content/uploads/2021/04/Pletenka.jpg",
+    i:"./img/pletenka.jpg",
     t:["ускоренный","кунжут","Inventis Софт Крема","плетение"],
     r:{
       ing:[
@@ -3281,7 +3368,7 @@ const ITEMS = [
 
   // --- Здоба, листкові, круасани ---
   {n:"Гаш", c:["butter"], s:"gash",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/GASH-.jpg",
+    i:"./img/gash.jpg",
     t:["французская","LV1","сметана","сдоба"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с) (закваска 67 + тесто 33)",g:100,p:100},
@@ -3306,7 +3393,7 @@ const ITEMS = [
       prod:["Livendo® LV1 (стартовая культура)","Magimix® белый","Magimix® голубой"]
     }},
   {n:"Кекс «Печёное яблоко»", c:["butter","festive"], s:"keks-pechyonoe-yabloko",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/01/keks-pechyonoe-yabloko.jpg",
+    i:"./img/keks-pechyonoe-yabloko.jpg",
     t:["яблоко","корица","бездрожжевой","разрыхлитель"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:100,p:100},
@@ -3324,7 +3411,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Печёное яблоко»"]
     }},
   {n:"Пирог «Рулетик с корицей»", c:["butter","festive","pastry"], s:"pirog-ruletiki-s-koricej",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Pirog-ruletiki-s-koritsey-.jpg",
+    i:"./img/pirog-ruletiki-s-koricej.jpg",
     t:["корица","творожный крем","помадка","дезактив. дрожжи RS 190"],
     r:{
       ing:[
@@ -3358,7 +3445,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Дрожжи дезактивированные Baker's Bonus® «RS 190 star»"]
     }},
   {n:"Рогалик «Печёное яблоко»", c:["butter","pastry"], s:"rogalik-pechyonoe-yabloko",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/01/rogalik-pechyonoe-yabloko.jpg",
+    i:"./img/rogalik-pechyonoe-yabloko.jpg",
     t:["яблоко","корица","штрейзель"],
     r:{
       ing:[{n:"Мука пшеничная в/с",g:98.3,p:98.3},
@@ -3383,7 +3470,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Печёное яблоко»","Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Сдоба «Куглоф Сале»", c:["butter"], s:"sdoba-kuglof-sale",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Kuglof-sale-.jpg",
+    i:"./img/sdoba-kuglof-sale.jpg",
     t:["солёная","ветчина","орех","лук","опара"],
     r:{
       ing:[{n:"Мука пшеничная в/с (1 с) (опара 50 + тесто 50)",g:100,p:100},
@@ -3409,7 +3496,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый"]
     }},
   {n:"Сдоба творожная", c:["butter","festive"], s:"sdoba-tvorozhnaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Sdoba-tvorozhnaya-.jpg",
+    i:"./img/sdoba-tvorozhnaya.jpg",
     t:["творог","Saf-Instant золотой","Magimix фиолетовый"],
     r:{
       ing:[
@@ -3439,7 +3526,7 @@ const ITEMS = [
       prod:["Сухие инстантные дрожжи Saf-Instant® золотые","Улучшитель Magimix® фиолетовый «Слойка+бриошь»"]
     }},
   {n:"Сдобная булочка «Маритоццо»", c:["butter","festive"], s:"sdobnaya-bulochka-maritoccco",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/08/maritotctco.jpg",
+    i:"./img/sdobnaya-bulochka-maritoccco.jpg",
     t:["итальянская","опара 2,5ч","крем из творожного сыра","Inventis Софт сдоба"],
     r:{
       ing:[
@@ -3467,7 +3554,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Улучшитель Inventis® «Софт сдоба»"]
     }},
   {n:"Тартин «Яблочный»", c:["wheat","festive","sourdough"], s:"tartin-yablochnyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2024/01/tartin-yablochnyi.jpg",
+    i:"./img/tartin-yablochnyj.jpg",
     t:["Livendo Соургрейн Печёное яблоко","заварная паста 50%","Magimix голубой","яблоко"],
     r:{
       ing:[
@@ -3492,7 +3579,7 @@ const ITEMS = [
       prod:["Заварная паста Livendo® «Соургрейн Печёное яблоко»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой «Заморозка + чиабатта»"]
     }},
   {n:"Багет овсяный", c:["wheat","custard","sandwich"], s:"baget-ovsyanyj",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/12/baget-ovsyanyj.jpg",
+    i:"./img/baget-ovsyanyj.jpg",
     t:["batard","Inventis Овсяная","250-400г"],
     r:{
       ing:[
@@ -3518,7 +3605,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Овсяная»","Прессованные дрожжи «Рекорд» красные","Magimix® «Пауер Про»"]
     }},
   {n:"Багет «Французский»", c:["wheat","sourdough","sandwich"], s:"francuzskij-baget",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/02/baget-na-zakvaske-Arom-Leven-.jpg",
+    i:"./img/francuzskij-baget.jpg",
     t:["классика","Livendo Аром левен","150-350г"],
     r:{
       ing:[
@@ -3544,7 +3631,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® фиолетовый","Закваска Livendo® «Аром левен»"]
     }},
   {n:"Краюшки овсяные", c:["wheat","custard","sandwich"], s:"krayushki-ovsyanye",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/12/krayushki-ovsyanye.jpg",
+    i:"./img/krayushki-ovsyanye.jpg",
     t:["Inventis Овсяная","маргарин","раскатка"],
     r:{
       ing:[
@@ -3568,7 +3655,7 @@ const ITEMS = [
       prod:["Заварная паста Inventis® «Овсяная»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Бриошь «Парижская»", c:["butter","festive"], s:"parizhskaya-briosh",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Briosh-parizhskaya-.jpg",
+    i:"./img/parizhskaya-briosh.jpg",
     t:["рождественская","классика","формы","40-300г"],
     r:{
       ing:[
@@ -3596,7 +3683,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый"]
     }},
   {n:"Пирог «Рождественская звезда»", c:["butter","sourdough","festive"], s:"pirog-rozhdestvenskaya-zvezda",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/11/rozhd-zvezda.jpg",
+    i:"./img/pirog-rozhdestvenskaya-zvezda.jpg",
     t:["рождественская","Livendo LV1","цукаты","закваска"],
     r:{
       ing:[
@@ -3628,7 +3715,7 @@ const ITEMS = [
       prod:["Стартовая культура Livendo® LV1","Magimix® фиолетовый","Magimix® белый"]
     }},
   {n:"Хлеб пшеничный на опаре", c:["wheat"], s:"xleb-pshenichnyj-na-opare",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/10/Hleb-pshenichnyj-na-opare.jpg",
+    i:"./img/xleb-pshenichnyj-na-opare.jpg",
     t:["опарный способ","социальный","формовой","300г/л"],
     r:{
       ing:[
@@ -3653,7 +3740,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Хлеб «Перуанский»", c:["rye","sourdough","custard","multigrain"], s:"xleb-peruanskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/04/hleb-peruanskiy.jpg",
+    i:"./img/xleb-peruanskij.jpg",
     t:["заварка+опара","семечки 40%","трёхстадийный"],
     r:{
       ing:[
@@ -3679,7 +3766,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® оранжевый"]
     }},
   {n:"Хлеб «Купеческий»", c:["rye","sourdough","custard"], s:"xleb-kupecheskij",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Kupecheskiy-.jpg",
+    i:"./img/xleb-kupecheskij.jpg",
     t:["заварка","Аром левен темный","60% ржаной"],
     r:{
       ing:[
@@ -3705,7 +3792,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® «Аром левен темный»","Magimix® оранжевый"]
     }},
   {n:"Хлеб «Кампань»", c:["rye","sourdough"], s:"xleb-kampan",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Hleb-Kampan-.jpg",
+    i:"./img/xleb-kampan.jpg",
     t:["закваска 24 ч","Livendo LV1","подовой"],
     r:{
       ing:[
@@ -3726,7 +3813,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Livendo® LV1","Magimix® зелёный"]
     }},
   {n:"Хлеб «Купеческий» с кориандром", c:["rye","custard"], s:"xleb-kupecheskij-s-koriandrom",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/10/Hleb-kupecheskij-s-koriandrom.jpg",
+    i:"./img/xleb-kupecheskij-s-koriandrom.jpg",
     t:["заварка","кориандр","65% ржаной"],
     r:{
       ing:[
@@ -3752,7 +3839,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® «Ибис» оранжевый","Magimix® «Софт сэндвич брэд»"]
     }},
   {n:"Хлеб пшеничный заливной", c:["wheat"], s:"xleb-pshenichnyj-zalivnoj",
-    i:"https://lesaffre.ru/wp-content/uploads/2020/10/Hleb-pshenichnyj-zalivnoj.jpg",
+    i:"./img/xleb-pshenichnyj-zalivnoj.jpg",
     t:["пулиш 16-18 ч","формовой с водой","средний пар"],
     r:{
       ing:[
@@ -3774,7 +3861,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Булочка с сыром", c:["wheat","custard","sandwich"], s:"bulochka-s-syrom",
-    i:"https://lesaffre.ru/wp-content/uploads/2019/12/bulochka-s-syrom2.jpg",
+    i:"./img/bulochka-s-syrom.jpg",
     t:["Inventis Маисовая","сыр 20%","батон"],
     r:{
       ing:[
@@ -3793,7 +3880,7 @@ const ITEMS = [
       prod:["Inventis® «Маисовая»","Прессованные дрожжи «Рекорд» красные","Magimix® «Пауер про»"]
     }},
   {n:"Багет на заварной пасте", c:["wheat","custard","sandwich"], s:"baget-na-zavarnoj-paste",
-    i:"https://lesaffre.ru/wp-content/uploads/2018/11/Baget_na_zavarnoy_paste1.png",
+    i:"./img/baget-na-zavarnoj-paste.png",
     t:["Inventis Белорусская","безопарный","лёгкий пар"],
     r:{
       ing:[
@@ -3810,7 +3897,7 @@ const ITEMS = [
       prod:["Inventis® «Белорусская светлая»","Прессованные дрожжи «Рекорд» красные"]
     }},
   {n:"Булочки с пророщенным зерном", c:["wheat","custard","sourdough","multigrain"], s:"bulochki-s-proroshhennym-zernom",
-    i:"https://lesaffre.ru/wp-content/uploads/2022/05/Bulochki-s-proroshhennym-zernom.jpg",
+    i:"./img/bulochki-s-proroshhennym-zernom.jpg",
     t:["Livendo Соургрейн","пророщенное зерно","булочка/багет"],
     r:{
       ing:[
@@ -3830,7 +3917,7 @@ const ITEMS = [
       prod:["Livendo® «Соургрейн Рожь»","Прессованные дрожжи «Рекорд» красные","Magimix® «Крафт»"]
     }},
   {n:"Фокаччо «Брэкфаст»", c:["butter","flat"], s:"fokachcho-brekfast",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Fokachcho-bre%60kfast-.jpg",
+    i:"./img/fokachcho-brekfast.jpg",
     t:["опара","ягода+крем","высокорецептурное"],
     r:{
       ing:[
@@ -3860,7 +3947,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® фиолетовый","Magimix® белый"]
     }},
   {n:"Лепешка «Сметанная»", c:["flat","sandwich","butter"], s:"lepyoshka-smetannaya",
-    i:"https://lesaffre.ru/wp-content/uploads/2016/06/Lepeshka-Smetannaya-.jpg",
+    i:"./img/lepyoshka-smetannaya.jpg",
     t:["сметана 30%","тонкая 2-2.5 мм","быстрая выпечка"],
     r:{
       ing:[
@@ -3884,7 +3971,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Magimix® белый","Magimix® зелёный"]
     }},
   {n:"Заварной формовой хлеб с пророщеным зерном", c:["rye","custard","multigrain"], s:"zavarnoj-formovoj-xleb-s-proroshhenym-zernom",
-    i:"https://lesaffre.ru/wp-content/uploads/2023/10/formovoj-na-proroshhennom.jpg.jpg",
+    i:"./img/zavarnoj-formovoj-xleb-s-proroshhenym-zernom.jpg",
     t:["Livendo Соургрейн","52% ржаной","ротационная печь"],
     r:{
       ing:[
@@ -3908,7 +3995,7 @@ const ITEMS = [
       prod:["Livendo® «Соургрейн Рожь»","Прессованные дрожжи «Рекорд» красные","Magimix® голубой"]
     }},
   {n:"Хлеб «Антарктический»", c:["wheat","flat","sandwich"], s:"antarkticheskij-xleb",
-    i:"https://static.tildacdn.com/tild6364-3666-4464-a161-363264326336/Instagram_36.png",
+    i:"./img/antarkticheskij-xleb.png",
     t:["лепёшка 1.5-2.5 мм","RS 190 Star","быстрая — 1 мин"],
     r:{
       ing:[
@@ -3934,7 +4021,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» красные","Дезактивированные дрожжи Baker's Bonus® «RS 190 Star»","Magimix® белый"]
     }},
   {n:"Круассан на маргарине", c:["butter","sandwich"], s:"kruassan-na-margarine",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/07/kruassan-na-margarine.jpg",
+    i:"./img/kruassan-na-margarine.jpg",
     t:["промышленный (10 кг)","слоение 25% маргарина","2 книжки"],
     r:{
       ing:[
@@ -3962,7 +4049,7 @@ const ITEMS = [
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® голубой"]
     }},
   {n:"Круассан на масле", c:["butter","sandwich"], s:"kruassan-na-masle",
-    i:"https://lesaffre.ru/wp-content/uploads/2025/07/kruassan-na-masle.jpg",
+    i:"./img/kruassan-na-masle.jpg",
     t:["промышленный (10 кг)","сливочное масло 45% на слоение","замороженный полуфабрикат"],
     r:{
       ing:[
@@ -4238,6 +4325,27 @@ async function loadAll(){
   const notes = await storeGet('notes'); if(notes) MEM.notes = notes;
   const scale = await storeGet('scale'); if(scale) MEM.scale = scale;
   const cooked = await storeGet('cooked'); if(cooked) MEM.cooked = cooked;
+  await migrateScaleV7();
+}
+
+// v7: конвертуємо старі збережені мultipliers у нові N (кг муки).
+// Старий mult × flour_base / 1000 = нове N. Виконується один раз.
+async function migrateScaleV7(){
+  const migrated = await storeGet('scaleV7Migrated');
+  if(migrated) return;
+  const newScale = {};
+  for(const slug in MEM.scale){
+    const item = ITEMS.find(x => x.s === slug);
+    if(item && item.r && item.r.total && item.r.total.p){
+      const fb = item.r.total.g / (item.r.total.p / 100);
+      const oldMult = MEM.scale[slug];
+      const newN = oldMult * fb / 1000;
+      if(newN >= 0.25 && newN <= 15) newScale[slug] = newN;
+    }
+  }
+  MEM.scale = newScale;
+  await saveScale();
+  await storeSet('scaleV7Migrated', true);
 }
 async function saveFav(){ await storeSet('favorites', [...MEM.favorites]); }
 async function saveNotes(){ await storeSet('notes', MEM.notes); }
@@ -4262,6 +4370,50 @@ function toast(msg){
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2000);
 }
+
+// ===== MASS DIALOG ("під вагу тіста") =====
+let _massOnConfirm = null;
+function openMassDialog(doughAtN1, onConfirm){
+  _massOnConfirm = onConfirm;
+  const sub = $("mass-sub");
+  sub.textContent = `×1 = 1 кг борошна → ${doughAtN1.toFixed(0)} г тіста`;
+  const input = $("mass-input");
+  input.value = '';
+  document.querySelectorAll('#mass-presets .mass-preset').forEach(b => b.classList.remove('on'));
+  $("mass-bg").classList.add('open');
+  setTimeout(() => input.focus(), 200);
+}
+function closeMassDialog(){
+  $("mass-bg").classList.remove('open');
+  _massOnConfirm = null;
+}
+function confirmMassDialog(){
+  const input = $("mass-input");
+  const activePreset = document.querySelector('#mass-presets .mass-preset.on');
+  let target = 0;
+  if(activePreset) target = parseFloat(activePreset.dataset.mass);
+  if(input.value.trim()) target = parseFloat(input.value.replace(',','.'));
+  if(!target || target<=0){ toast('Введи вагу більше нуля'); return; }
+  const cb = _massOnConfirm;
+  closeMassDialog();
+  if(cb) cb(target);
+}
+document.querySelectorAll('#mass-presets .mass-preset').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('#mass-presets .mass-preset').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    $("mass-input").value = '';
+  });
+});
+$("mass-input").addEventListener('input', () => {
+  document.querySelectorAll('#mass-presets .mass-preset').forEach(x => x.classList.remove('on'));
+});
+$("mass-input").addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); confirmMassDialog(); }
+});
+$("mass-ok").addEventListener('click', confirmMassDialog);
+$("mass-cancel").addEventListener('click', closeMassDialog);
+$("mass-bg").addEventListener('click', e => { if(e.target === $("mass-bg")) closeMassDialog(); });
 
 function byCats(item){ return item.c.map(c => CATS[c]?.label||c); }
 
@@ -4400,7 +4552,13 @@ function renderRecipeSheet(idx){
     renderStats(); renderGrid();
   });
 
-  const scale = MEM.scale[it.s] || 1;
+  // v7: шкала в «кг муки». flourBase = мука при базовому рецепті (до масштабування).
+  // internalMult = реальний множник до базових грам інгредієнтів.
+  // scale (N) — кількість кг муки, саме його бачить користувач у ×-дисплеї та пресетах.
+  const flourBase = (it.r && it.r.total && it.r.total.p) ? it.r.total.g / (it.r.total.p / 100) : 0;
+  const defaultN = flourBase > 0 ? flourBase / 1000 : 1;
+  const scale = MEM.scale[it.s] ?? defaultN;
+  const internalMult = flourBase > 0 ? (scale * 1000) / flourBase : scale;
   const notes = MEM.notes[it.s] || '';
   const cookedHist = MEM.cooked[it.s] || [];
 
@@ -4429,12 +4587,12 @@ function renderRecipeSheet(idx){
           <div class="scale-label">Масштаб порції</div>
           <div class="scale-val" id="sc-val">×${scale.toFixed(scale<1?2:1)}</div>
         </div>
-        <input type="range" class="scale-slider" id="sc-slider" min="0.25" max="5" step="0.05" value="${scale}">
+        <input type="range" class="scale-slider" id="sc-slider" min="0.25" max="15" step="0.25" value="${scale}">
         <div class="scale-presets">
           <button class="preset-btn ${scale===0.5?'on':''}" data-s="0.5">×0.5</button>
           <button class="preset-btn ${scale===1?'on':''}" data-s="1">×1</button>
           <button class="preset-btn ${scale===2?'on':''}" data-s="2">×2</button>
-          <button class="preset-btn ${scale===5?'on':''}" data-s="5">×5</button>
+          <button class="preset-btn ${scale===3?'on':''}" data-s="3">×3</button>
           <button class="preset-btn" id="sc-bymass">під вагу тіста…</button>
         </div>
       </div>
@@ -4445,11 +4603,11 @@ function renderRecipeSheet(idx){
           ${r.ing.map((i,ii)=>`
             <tr>
               <td class="ig-n ${i.l?'lsf':''}">${esc(i.n)}</td>
-              <td class="ig-g" data-g="${i.g}">${(i.g*scale).toFixed(1)} г</td>
+              <td class="ig-g" data-g="${i.g}">${(i.g*internalMult).toFixed(1)} г</td>
               <td class="ig-p">${i.p}%</td>
             </tr>`).join('')}
         </tbody></table>
-        ${r.total? `<div class="ing-total"><span>Всього тіста</span><b id="t-tot">${(r.total.g*scale).toFixed(0)} г / ${r.total.p}% на борошно</b></div>`:''}
+        ${r.total? `<div class="ing-total"><span>Всього тіста</span><b id="t-tot">${(r.total.g*internalMult).toFixed(0)} г / ${r.total.p}% на борошно</b></div>`:''}
       </div>
 
       <div class="sec">
@@ -4516,18 +4674,19 @@ function renderRecipeSheet(idx){
   if(it.r){
     const sliderEl = $("sc-slider");
     const valEl = $("sc-val");
-    const applyScale = (mult, persist=true) => {
-      valEl.textContent = `×${mult.toFixed(mult<1?2:1)}`;
+    const applyScale = (N, persist=true) => {
+      valEl.textContent = `×${N.toFixed(N<1?2:1)}`;
+      const iMult = flourBase > 0 ? (N * 1000) / flourBase : N;
       document.querySelectorAll('#ing-body .ig-g').forEach(td => {
         const g = parseFloat(td.dataset.g);
-        td.textContent = (g*mult).toFixed(1) + ' г';
+        td.textContent = (g*iMult).toFixed(1) + ' г';
       });
       const tot = $("t-tot");
-      if(tot && it.r.total) tot.innerHTML = `${(it.r.total.g*mult).toFixed(0)} г / ${it.r.total.p}% на борошно`;
+      if(tot && it.r.total) tot.innerHTML = `${(it.r.total.g*iMult).toFixed(0)} г / ${it.r.total.p}% на борошно`;
       document.querySelectorAll('.preset-btn[data-s]').forEach(b => {
-        b.classList.toggle('on', parseFloat(b.dataset.s)===mult);
+        b.classList.toggle('on', Math.abs(parseFloat(b.dataset.s)-N) < 0.001);
       });
-      if(persist){ MEM.scale[it.s] = mult; saveScale(); }
+      if(persist){ MEM.scale[it.s] = N; saveScale(); }
     };
     sliderEl.addEventListener('input', e => applyScale(parseFloat(e.target.value)));
     document.querySelectorAll('.preset-btn[data-s]').forEach(b => {
@@ -4537,14 +4696,20 @@ function renderRecipeSheet(idx){
       });
     });
     $("sc-bymass").addEventListener('click', () => {
-      const targetStr = prompt(`На яку вагу тіста розрахувати?\nПоточний total: ${it.r.total?.g} г (при ×1)`, '1000');
-      if(!targetStr) return;
-      const target = parseFloat(targetStr.replace(',','.'));
-      if(!target || target<=0 || !it.r.total) return;
-      const mult = target / it.r.total.g;
-      const clamped = Math.max(0.25, Math.min(5, mult));
-      sliderEl.value = clamped; applyScale(clamped);
-      toast(`Перераховано на ${target} г тіста`);
+      if(!it.r.total || !flourBase) return;
+      const doughAtN1 = 1000 * it.r.total.p / 100; // скільки тіста при 1 кг муки
+      openMassDialog(doughAtN1, (targetDough) => {
+        const N = targetDough / doughAtN1;
+        const sMin = parseFloat(sliderEl.min);
+        const sMax = parseFloat(sliderEl.max);
+        const clamped = Math.max(sMin, Math.min(sMax, N));
+        sliderEl.value = clamped; applyScale(clamped);
+        if(Math.abs(clamped - N) > 0.001){
+          toast(`Обмежено до ×${clamped.toFixed(1)} (межа слайдера)`);
+        } else {
+          toast(`Перераховано на ${targetDough} г тіста (×${N.toFixed(2)})`);
+        }
+      });
     });
   }
 
