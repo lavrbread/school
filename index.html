@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v14 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v16 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -308,8 +308,8 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
 }
-.card-fav svg { width: 16px; height: 16px; color: var(--lsf-hint); }
-.card-fav.on svg { color: var(--lsf-gold); fill: var(--lsf-gold); }
+.card-fav svg { width: 16px; height: 16px; color: #3b82f6; }   /* v015: було var(--lsf-hint) */
+.card-fav.on svg { color: var(--lsf-red); fill: var(--lsf-red); } /* v016: активна — червона як бренд-марк lS (було gold) */
 .badge {
   font-size: 9px; font-weight: 700;
   padding: 3px 7px; border-radius: 4px;
@@ -1089,7 +1089,7 @@ html, body {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v14</span>
+    <span class="footer-ver">v16</span>
   </footer>
 </div>
 
