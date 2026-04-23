@@ -92,7 +92,7 @@ html, body {
 }
 .brand-logos a { display: block; line-height: 0; }
 .brand-logos .logo-lavr { height: 44px; width: auto; display: block; object-fit: contain; }
-.brand-logos .logo-lesaffre { height: 60px; width: auto; display: block; object-fit: contain; margin-top: 10px; }
+.brand-logos .logo-lesaffre { height: 66px; width: auto; display: block; object-fit: contain; margin-top: 10px; }
 .brand-mark {
   width: 38px; height: 38px;
   background: var(--lsf-red);
@@ -125,7 +125,7 @@ html, body {
   position: sticky;
   top: var(--safe-top);
   background: var(--lsf-cream);
-  padding: 8px 0;
+  padding: 0 0 8px;              /* v010e: прибрано верхній padding — іконки впритул до лінії */
   z-index: 50;
   margin: 0 -16px 12px;
   padding-left: 16px; padding-right: 16px;
@@ -133,8 +133,8 @@ html, body {
   transition: border-color .2s;
 }
 .controls.stuck { border-bottom-color: var(--lsf-line); }
-.btn-row { display: flex; gap: 8px; align-items: center; justify-content: flex-start; margin-bottom: 8px; }
-.search-row { display: flex; gap: 8px; align-items: center; }
+/* v010f: btn-row прибрано — іконки тепер у search-row праворуч від поля пошуку */
+.search-row { display: flex; gap: 6px; align-items: center; }
 .search {
   flex: 1; height: 42px; padding: 0 14px;
   font-size: 16px; font-family: inherit;
@@ -145,7 +145,7 @@ html, body {
 }
 .search:focus { border-color: var(--lsf-red); }
 .icon-btn {
-  height: 42px; width: 42px;
+  height: 42px; width: 42px;                       /* v010g: повернули 42×42 (було 34) */
   border: 1px solid var(--lsf-line-strong);
   border-radius: var(--r-md);
   background: white;
@@ -154,7 +154,7 @@ html, body {
 }
 .icon-btn:active { background: var(--lsf-warm); }
 .icon-btn.active { background: var(--lsf-red); border-color: var(--lsf-red); color: white; }
-.icon-btn svg { width: 20px; height: 20px; }
+.icon-btn svg { width: 20px; height: 20px; }      /* v010g: повернули 20×20 */
 
 /* FILTER PILLS */
 .pills-wrap {
@@ -180,6 +180,21 @@ html, body {
 .pill.active { background: var(--lsf-black); border-color: var(--lsf-black); color: white; }
 .pill.active .cnt { background: rgba(255,255,255,.2); color: rgba(255,255,255,.85); }
 
+/* Pill-кнопка «# теги» (v010c) — триггер модалки тегів, стилізована як категорія */
+.pill.pill-tags {
+  background: white; border-color: #3b82f6; color: #3b82f6;
+  font-weight: 600;
+}
+.pill.pill-tags .hash {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #3b82f6; color: white; font-weight: 700; font-size: 11px;
+}
+.pill.pill-tags.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+.pill.pill-tags.active .hash { background: white; color: #3b82f6; }
+.pill.pill-tags .cnt { background: #3b82f6; color: white; }
+.pill.pill-tags.active .cnt { background: white; color: #3b82f6; }
+
 .subfilters { display: flex; gap: 8px; margin-top: 10px; font-size: 12px; flex-wrap: wrap; }
 .chip {
   padding: 5px 10px; background: white;
@@ -189,14 +204,78 @@ html, body {
 }
 .chip.active { background: var(--lsf-red); color: white; border-color: var(--lsf-red); }
 
+/* FLOUR FILTER (v010) */
+.flours-wrap {
+  margin: 8px -16px 0; padding: 0 16px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.flours-wrap::-webkit-scrollbar { display: none; }
+.flours { display: flex; gap: 6px; padding-bottom: 2px; width: max-content; }
+.flour-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; font-size: 12px; font-weight: 500;
+  background: var(--lsf-warm); border: 1px solid var(--lsf-line);
+  border-radius: 999px; white-space: nowrap;
+  cursor: pointer; color: var(--lsf-ink);
+}
+.flour-chip .cnt { font-size: 10px; color: var(--lsf-hint); margin-left: 2px; }
+.flour-chip.active { background: #b8860b; border-color: #b8860b; color: white; }
+.flour-chip.active .cnt { color: rgba(255,255,255,.85); }
+
+/* TAG CLOUD (v010 → в модалці з v010b) */
+.tag-cloud-hdr {
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+  margin-bottom: 8px; font-size: 12px;
+}
+.tag-cloud-toggle, .tag-cloud-clear {
+  background: none; border: 0; padding: 0;
+  color: var(--lsf-red); font-size: 12px; font-weight: 500;
+  cursor: pointer; text-decoration: underline; font-family: inherit;
+}
+.tag-cloud-clear { color: var(--lsf-muted); }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 9px; font-size: 11px; font-weight: 500;
+  background: white; border: 1px solid var(--lsf-line);
+  border-radius: 999px; cursor: pointer;
+  color: var(--lsf-muted); white-space: nowrap;
+}
+.tag-chip .cnt { font-size: 10px; opacity: 0.7; }
+.tag-chip.active {
+  background: var(--lsf-black); border-color: var(--lsf-black); color: white;
+}
+.tag-chip.active .cnt { color: rgba(255,255,255,.8); }
+
 /* GRID */
 .grid {
+  display: block;                 /* v010g: секції → grid всередині кожної секції */
+  margin-top: 14px;
+}
+.grid-section { margin-bottom: 22px; }
+.grid-section:last-child { margin-bottom: 0; }
+.grid-section-hdr {
+  display: flex; align-items: baseline; gap: 10px;
+  margin: 0 0 10px; padding: 0;
+  font-size: 13px; font-weight: 700; color: var(--lsf-black);
+  letter-spacing: 0.2px;
+}
+.grid-section-hdr .dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;                 /* v010g: background задається inline'ом з CATS color */
+}
+.grid-section-hdr .cnt {
+  font-size: 11px; font-weight: 500; color: var(--lsf-muted);
+  letter-spacing: 0;
+}
+.grid-section-body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px; margin-top: 14px;
+  gap: 12px;
 }
 @media (min-width: 640px) {
-  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .grid-section-body { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 }
 
 .card {
@@ -237,6 +316,7 @@ html, body {
 }
 .badge-recipe { background: var(--lsf-red); color: white; }
 .badge-draft { background: var(--lsf-gold); color: var(--lsf-black); }
+.badge-new { background: #3b82f6; color: white; }
 
 .card-body { padding: 10px 12px 12px; }
 .card-title {
@@ -273,6 +353,17 @@ html, body {
 .app-footer a:active { opacity: 0.6; }
 .app-footer .dot-sep { margin: 0 6px; opacity: 0.5; }
 .app-footer .footer-logo { display: block; height: 48px; width: auto; margin: 0 auto 10px; object-fit: contain; }
+/* v010f: settings trigger + version in footer */
+.app-footer .footer-set {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; margin-bottom: 8px;
+  background: white; border: 1px solid var(--lsf-line);
+  border-radius: 999px; color: var(--lsf-muted);
+  font-size: 12px; cursor: pointer;
+}
+.app-footer .footer-set:active { background: var(--lsf-warm); }
+.app-footer .footer-set svg { width: 13px; height: 13px; }
+.app-footer .footer-ver { display: block; margin-top: 4px; opacity: 0.7; font-size: 10px; }
 
 /* MODAL */
 .sheet-bg {
@@ -450,6 +541,52 @@ html, body {
 .mass-btn.cancel { background: var(--lsf-warm); color: var(--lsf-ink); }
 .mass-btn.ok { background: var(--lsf-red); color: white; }
 .mass-btn.ok:disabled { background: var(--lsf-line-strong); cursor: not-allowed; }
+
+/* TAGS DIALOG (v010b) */
+.tags-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.tags-bg.open { opacity: 1; pointer-events: auto; }
+.tags-card {
+  background: white;
+  border-radius: var(--r-lg);
+  width: 100%; max-width: 420px;
+  max-height: 80vh;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transform: translateY(16px) scale(0.98);
+  transition: transform .2s ease;
+  display: flex; flex-direction: column;
+}
+.tags-bg.open .tags-card { transform: translateY(0) scale(1); }
+.tags-card .tag-cloud {
+  overflow-y: auto;
+  padding: 4px 0 10px;
+  margin-bottom: 10px;
+}
+.tags-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+  border-top: 1px solid var(--lsf-line); padding-top: 12px;
+}
+
+/* Icon-button badge (v010b) */
+.icon-btn { position: relative; }
+.icon-badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px; border-radius: 8px;
+  background: var(--lsf-red); color: white;
+  font-size: 10px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.icon-btn.active .icon-badge { background: white; color: var(--lsf-red); }
 
 /* SECTIONS */
 .sec {
@@ -900,7 +1037,7 @@ html, body {
       <div class="brand-mark">lS</div>
       <div>
         <div class="brand-title">lavr.SCHOOL</div>
-        <div class="brand-sub">каталог рецептур Lesaffre · v4</div>
+        <div class="brand-sub">каталог рецептур Lesaffre</div>
       </div>
       <div class="brand-logos">
         <a href="https://lesaffre.ua" target="_blank" rel="noopener" title="Lesaffre Україна">
@@ -912,7 +1049,8 @@ html, body {
   </header>
 
   <div class="controls" id="ctrls">
-    <div class="btn-row">
+    <div class="search-row">
+      <input class="search" id="search" placeholder="пошук: чіабата, закваска, житній, Inventis…" autocomplete="off" autocorrect="off" autocapitalize="off">
       <button class="icon-btn" id="btn-fav" title="Обране">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       </button>
@@ -922,15 +1060,12 @@ html, body {
       <button class="icon-btn" id="btn-vid" title="Відео">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
       </button>
-      <button class="icon-btn" id="btn-set" title="Налаштування">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      </button>
-    </div>
-    <div class="search-row">
-      <input class="search" id="search" placeholder="пошук: чіабата, закваска, Inventis…" autocomplete="off" autocorrect="off" autocapitalize="off">
     </div>
     <div class="pills-wrap">
       <div class="pills" id="pills"></div>
+    </div>
+    <div class="flours-wrap" id="flours-wrap">
+      <div class="flours" id="flours"></div>
     </div>
   </div>
 
@@ -941,12 +1076,19 @@ html, body {
       <img class="footer-logo" src="https://res2.weblium.site/res/685481e88a7c23cc83900898/685720e1f914b287c6f93030_optimized_509.webp" alt="lavrbread" onerror="this.style.display='none'">
     </a>
     <div>
+      <button class="footer-set" id="btn-set" title="Налаштування">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span>налаштування</span>
+      </button>
+    </div>
+    <div>
       <a href="https://lesaffre.ua" target="_blank" rel="noopener">lesaffre.ua</a>
       <span class="dot-sep">·</span>
       <span>lavr.SCHOOL by Ihor Lavreshyn</span>
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
+    <span class="footer-ver">v4</span>
   </footer>
 </div>
 
@@ -995,6 +1137,21 @@ html, body {
     <div class="mass-actions">
       <button class="mass-btn cancel" id="mass-cancel">Скасувати</button>
       <button class="mass-btn ok" id="mass-ok">Перерахувати</button>
+    </div>
+  </div>
+</div>
+
+<div class="tags-bg" id="tags-bg">
+  <div class="tags-card">
+    <div class="mass-title">Теги</div>
+    <div class="mass-sub">Оберіть теги, щоб звузити пошук. OR — будь-який з обраних.</div>
+    <div class="tag-cloud-hdr">
+      <button class="tag-cloud-toggle" id="tag-cloud-toggle" data-expanded="0">більше</button>
+      <button class="tag-cloud-clear" id="tag-cloud-clear" style="display:none">очистити</button>
+    </div>
+    <div class="tag-cloud" id="tag-cloud"></div>
+    <div class="tags-actions">
+      <button class="mass-btn ok" id="tags-done">Готово</button>
     </div>
   </div>
 </div>
@@ -4076,6 +4233,92 @@ const ITEMS = [
         vyp:"14-15 мин / 210-180°C"},
       prod:["Прессованные дрожжи «Рекорд» синие","Magimix® голубой"]
     }},
+  // ============ v009: нові рецепти (з PDF-карток Lesaffre) ============
+  {n:"Хліб «Древлянський заварний»", c:["rye","custard"], s:"xleb-drevlyanskyj-zavarnyj",
+    i:"./img/xleb-drevlyanskyj-zavarnyj.jpg",
+    t:["нові","заварний","висівки","820 г"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне 1с",g:45,p:45},
+        {n:"Борошно житнє обдирне",g:45,p:45},
+        {n:"Суміш х/п «Древлянська заварна» INVENTIS",g:10,p:10,l:1},
+        {n:"Дріжджі пресовані «Рекорд» червоні",g:2,p:2,l:1},
+        {n:"Сіль",g:2,p:2},
+        {n:"Цукор",g:8,p:8},
+        {n:"Вода",g:80,p:80},
+        {n:"Висівки (для обсипки)",g:2.5,p:2.5}
+      ],
+      total:{g:194.5,p:194.5},
+      proc:{
+        mesa:"двошвидкісна",
+        zames:"4-5 хв (1 шв) + 4-6 хв (2 шв)",
+        temp:"26-28°C",
+        broz:"30 хв",
+        delenie:"820 г",
+        form:"овальна форма в лозі, декорування висівками",
+        rast:"50-70 хв / 35-37°C",
+        vyp:"30-35 хв / 240→170°C з парою"
+      },
+      prod:["Суміш «Древлянська заварна» INVENTIS","Дріжджі «Рекорд» червоні"]
+    }},
+  {n:"Хліб «Деснянський»", c:["rye"], s:"xleb-desnyanskyj",
+    i:"./img/xleb-desnyanskyj.jpg",
+    t:["нові","повидло яблучне","карамальт","400 г"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне 1с",g:64,p:64},
+        {n:"Борошно житнє обдирне",g:30,p:30},
+        {n:"Суміш х/п «Древлянська заварна» INVENTIS",g:6,p:6,l:1},
+        {n:"Дріжджі пресовані «Рекорд» червоні",g:2,p:2,l:1},
+        {n:"Сіль",g:2,p:2},
+        {n:"Сироп цукрово-солодовий «Карамальт»",g:5,p:5,l:1},
+        {n:"Повидло яблучне",g:3,p:3},
+        {n:"Олія соняшникова",g:2,p:2},
+        {n:"Magimix® оранжевий",g:0.3,p:0.3,l:1},
+        {n:"Вода",g:67,p:67}
+      ],
+      total:{g:181.3,p:181.3},
+      proc:{
+        mesa:"двошвидкісна",
+        zames:"4-5 хв (1 шв) + 4-6 хв (2 шв)",
+        temp:"28-30°C",
+        broz:"30 хв",
+        delenie:"400 г",
+        form:"укладання у форми",
+        rast:"60-80 хв / 35-37°C",
+        vyp:"20-25 хв / 220→170°C з парою"
+      },
+      prod:["Суміш «Древлянська заварна» INVENTIS","Дріжджі «Рекорд» червоні","Карамальт","Magimix® оранжевий"]
+    }},
+  {n:"Хліб «Литовський»", c:["wheat","rye"], s:"xleb-litovskyj",
+    i:"./img/xleb-litovskyj.jpg",
+    t:["нові","повидло яблучне","карамальт","570 г"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне 1с",g:84,p:84},
+        {n:"Борошно житнє обдирне",g:10,p:10},
+        {n:"Суміш х/п «Древлянська заварна» INVENTIS",g:6,p:6,l:1},
+        {n:"Дріжджі пресовані «Рекорд» червоні",g:2,p:2,l:1},
+        {n:"Сіль",g:1.8,p:1.8},
+        {n:"Сироп цукрово-солодовий «Карамальт»",g:5,p:5,l:1},
+        {n:"Повидло яблучне",g:5,p:5},
+        {n:"Magimix® голубий",g:1.5,p:1.5,l:1},
+        {n:"Вода",g:70,p:70}
+      ],
+      total:{g:185.3,p:185.3},
+      proc:{
+        mesa:"двошвидкісна",
+        zames:"4-5 хв (1 шв) + 4-6 хв (2 шв)",
+        temp:"26-28°C",
+        broz:"30-40 хв",
+        predrast:"10 хв",
+        delenie:"570 г",
+        form:"овальна форма в лозі",
+        rast:"50-60 хв / 35-37°C",
+        vyp:"22-24 хв / 220→200°C з парою"
+      },
+      prod:["Суміш «Древлянська заварна» INVENTIS","Дріжджі «Рекорд» червоні","Карамальт","Magimix® голубий"]
+    }},
 ];
 
 // ============================================================
@@ -4357,9 +4600,86 @@ async function saveCooked(){ await storeSet('cooked', MEM.cooked); }
 // ============================================================
 const state = {
   query: "", activeCats: new Set(),
+  activeFlours: new Set(), activeTags: new Set(),
+  tagCloudExpanded: false,
   onlyRecipes: false, showDraft: true,
   favOnly: false, openSlug: null
 };
+
+// ============================================================
+// v010 — локалізований пошук + борошно + хмара тегів
+// ============================================================
+
+// Нормалізація рядка для пошуку: прибирає різницю між RU/UA написанням.
+// Працює в обидві сторони: користувач ввів "чіабата" — знайде "чиабатта";
+// ввів "ржаной" — знайде "житній". Всі корні редукуються до одного варіанту.
+function normalize(s){
+  let r = String(s).toLowerCase()
+    // RU → нейтральне
+    .replace(/ё/g,'е').replace(/ъ/g,'').replace(/ы/g,'и')
+    .replace(/э/g,'е')
+    // UA → нейтральне
+    .replace(/і/g,'и').replace(/ї/g,'и')
+    .replace(/є/g,'е').replace(/ґ/g,'г');
+  // корені-синоніми (після транслітерації)
+  r = r.replace(/ржан/g,'житн');           // ржаной → житній
+  r = r.replace(/мука/g,'борошно');
+  r = r.replace(/чиабатт?/g,'чиабат');     // чиабатта / чіабата → чиабат
+  r = r.replace(/дрожж/g,'дриждж');         // дрожжи → дріжджі
+  r = r.replace(/овсян/g,'висян');          // овсяный → вівсяний
+  r = r.replace(/вивсян/g,'висян');         // вівсяний (після і→и) → висян
+  r = r.replace(/дерев/g,'дерев');          // сільський/деревенский — залишаємо
+  r = r.replace(/пшеничн/g,'пшеничн');
+  return r;
+}
+
+// Класифікатор борошна: сканує r.ing, повертає Set ключів: пшеничне / житнє / ...
+const FLOUR_KEYS = ['пшеничне','житнє','гречане','спельтове','кукурудзяне','вівсяне','ячмінне','мультизернове'];
+function flourOf(it){
+  const out = new Set();
+  if(!it.r || !Array.isArray(it.r.ing)) return out;
+  for(const ing of it.r.ing){
+    const raw = (ing.n||'').toLowerCase();
+    if(!/мук|борошн/.test(raw)) continue;
+    const n = normalize(raw);
+    if(/пшеничн/.test(n)) out.add('пшеничне');
+    if(/житн/.test(n)) out.add('житнє');
+    if(/гречи|гречан/.test(n)) out.add('гречане');
+    if(/спельт|полб/.test(n)) out.add('спельтове');
+    if(/кукуруд|кукуруз|маис/.test(n)) out.add('кукурудзяне');
+    if(/висян/.test(n)) out.add('вівсяне');   // після normalize "овсян"→"висян"
+    if(/ячмин/.test(n)) out.add('ячмінне');
+  }
+  // мультизерно: ≥2 різних борошна в одному рецепті
+  if(out.size >= 2) out.add('мультизернове');
+  return out;
+}
+
+const FLOUR_LABELS = {
+  'пшеничне':    'Пшеничне',
+  'житнє':       'Житнє',
+  'гречане':     'Гречане',
+  'спельтове':   'Спельтове',
+  'кукурудзяне': 'Кукурудзяне',
+  'вівсяне':     'Вівсяне',
+  'ячмінне':     'Ячмінне',
+  'мультизернове':'Мультизернове'
+};
+
+// Відображення тега з малої літери (тільки для кирилиці — латинські бренди як Livendo/Inventis не чіпаємо)
+function displayTag(t){
+  // v010d: повний lowercase (вкл. латиницю: Inventis → inventis, Livendo LV5 → livendo lv5)
+  return String(t || '').toLowerCase();
+}
+// Відсіяти технологічні теги (грамівки, %, °C, час розстоювання, рецептурні %).
+// Правило: будь-який тег з цифрою — технологічний, АЛЕ бренди/коди Lesaffre
+// (Livendo LV1, Magimix AM 301, Inventis Маисовая 40%, RS 190 Star) — лишаємо.
+function isIngredientTag(t){
+  t = String(t || '');
+  if(!/\d/.test(t)) return true;  // без цифр — точно інгредієнт/бренд
+  if(/^(Livendo|Magimix|Inventis|LV\d|AM |RS |Soft'?R|Sapore|Aroma Levain)/i.test(t)) return true;
+  return false;  // інше з цифрами — технологічне
+}
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -4426,13 +4746,28 @@ function matchItem(it){
   if(state.onlyRecipes && !it.r) return false;
   if(!state.showDraft && it.draft) return false;
   if(state.query){
-    const q = state.query.toLowerCase();
-    const hay = (it.n + " " + (it.t||[]).join(" ") + " " + byCats(it).join(" ") +
-                 " " + (it.r?.prod||[]).join(" ")).toLowerCase();
+    const q = normalize(state.query);
+    const ingNames = (it.r?.ing||[]).map(x=>x.n||'').join(" ");
+    const hay = normalize(
+      it.n + " " + (it.t||[]).join(" ") + " " + byCats(it).join(" ") +
+      " " + (it.r?.prod||[]).join(" ") + " " + ingNames
+    );
     if(!hay.includes(q)) return false;
   }
   if(state.activeCats.size){
     if(!it.c.some(c => state.activeCats.has(c))) return false;
+  }
+  if(state.activeFlours.size){
+    const f = flourOf(it);
+    let ok = false;
+    for(const k of state.activeFlours) if(f.has(k)){ ok = true; break; }
+    if(!ok) return false;
+  }
+  if(state.activeTags.size){
+    const tags = new Set((it.t||[]));
+    let ok = false;
+    for(const t of state.activeTags) if(tags.has(t)){ ok = true; break; }
+    if(!ok) return false;
   }
   return true;
 }
@@ -4459,14 +4794,23 @@ function renderPills(){
     if(!state.showDraft && it.draft) return;
     it.c.forEach(c => counts[c] = (counts[c]||0)+1);
   });
-  $("pills").innerHTML = Object.entries(CATS).filter(([k])=>counts[k]>0).map(([k,v]) => `
+  const nTags = state.activeTags.size;
+  const tagsPill = `
+    <div class="pill pill-tags ${nTags?'active':''}" id="pill-tags">
+      <span class="hash">#</span>
+      <span>теги</span>
+      ${nTags ? `<span class="cnt">${nTags}</span>` : ''}
+    </div>`;
+  const catPills = Object.entries(CATS).filter(([k])=>counts[k]>0).map(([k,v]) => `
     <div class="pill ${state.activeCats.has(k)?'active':''}" data-cat="${k}">
       <span class="dot" style="color:${v.color}"></span>
       <span>${v.label}</span>
       <span class="cnt">${counts[k]}</span>
     </div>
   `).join("");
-  document.querySelectorAll('.pill').forEach(el => {
+  $("pills").innerHTML = tagsPill + catPills;
+  $("pill-tags").addEventListener('click', openTagsDialog);
+  document.querySelectorAll('.pill[data-cat]').forEach(el => {
     el.addEventListener('click', () => {
       const c = el.dataset.cat;
       if(state.activeCats.has(c)) state.activeCats.delete(c);
@@ -4476,6 +4820,36 @@ function renderPills(){
   });
 }
 
+// v010g: single-card HTML builder (використовується в renderGrid під секціями).
+function renderCardHTML({it, idx}){
+  const mainCat = CATS[it.c[0]];
+  const fav = MEM.favorites.has(it.s);
+  const isNew = (it.t||[]).includes('нові');
+  const badges = [
+    isNew ? `<span class="badge badge-new">нові</span>`:'',
+    it.r ? `<span class="badge badge-recipe">рецепт</span>`:'',
+    it.draft ? `<span class="badge badge-draft">v5</span>`:''
+  ].filter(Boolean).join('');
+  return `
+    <div class="card ${it.r?'has-recipe':''}" data-idx="${idx}">
+      <div class="card-img" style="color:${mainCat?.color}">
+        ${it.i? `<img src="${it.i}" alt="" loading="lazy" onerror="this.onerror=null;this.style.display='none'">`
+              : getIconSvg()}
+        ${badges?`<div class="card-badges">${badges}</div>`:''}
+        <div class="card-fav ${fav?'on':''}" data-fav="${it.s}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${esc(it.n)}</div>
+        <div class="card-tags">
+          <span class="t-cat" style="color:${mainCat?.color}">${mainCat?.label||''}</span>
+          ${(it.t||[]).slice(0,1).map(t=>`<span class="t-note">${esc(t)}</span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
 function renderGrid(){
   const filtered = ITEMS.map((it,idx)=>({it,idx})).filter(x=>matchItem(x.it));
   const grid = $("grid");
@@ -4483,33 +4857,45 @@ function renderGrid(){
     grid.innerHTML = `<div class="empty"><b>Нічого не знайдено</b>Спробуй інший запит або скинь фільтри.</div>`;
     return;
   }
-  grid.innerHTML = filtered.map(({it,idx}) => {
-    const mainCat = CATS[it.c[0]];
-    const fav = MEM.favorites.has(it.s);
-    const badges = [
-      it.r ? `<span class="badge badge-recipe">рецепт</span>`:'',
-      it.draft ? `<span class="badge badge-draft">v5</span>`:''
-    ].filter(Boolean).join('');
-    return `
-      <div class="card ${it.r?'has-recipe':''}" data-idx="${idx}">
-        <div class="card-img" style="color:${mainCat?.color}">
-          ${it.i? `<img src="${it.i}" alt="" loading="lazy" onerror="this.onerror=null;this.style.display='none'">`
-                : getIconSvg()}
-          ${badges?`<div class="card-badges">${badges}</div>`:''}
-          <div class="card-fav ${fav?'on':''}" data-fav="${it.s}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
+
+  // v010g: групування по основній категорії + спец-секція «нові» зверху.
+  const news = filtered.filter(x => (x.it.t||[]).includes('нові'));
+  const byCat = {};
+  filtered.forEach(x => {
+    const k = x.it.c[0];
+    (byCat[k] = byCat[k] || []).push(x);
+  });
+
+  const sections = [];
+  if(news.length){
+    sections.push(`
+      <div class="grid-section grid-new">
+        <div class="grid-section-hdr">
+          <span class="dot" style="background:#3b82f6"></span>
+          <span>🆕 Нові рецепти</span>
+          <span class="cnt">${news.length}</span>
         </div>
-        <div class="card-body">
-          <div class="card-title">${esc(it.n)}</div>
-          <div class="card-tags">
-            <span class="t-cat" style="color:${mainCat?.color}">${mainCat?.label||''}</span>
-            ${(it.t||[]).slice(0,1).map(t=>`<span class="t-note">${esc(t)}</span>`).join('')}
-          </div>
-        </div>
+        <div class="grid-section-body">${news.map(renderCardHTML).join('')}</div>
       </div>
-    `;
-  }).join("");
+    `);
+  }
+  // Порядок секцій — як у CATS (wheat → rye → sourdough → custard → multigrain →
+  // sandwich → flat → butter → pastry → festive).
+  Object.entries(CATS).forEach(([k, v]) => {
+    const items = byCat[k];
+    if(!items || !items.length) return;
+    sections.push(`
+      <div class="grid-section">
+        <div class="grid-section-hdr">
+          <span class="dot" style="background:${v.color}"></span>
+          <span>${v.label}</span>
+          <span class="cnt">${items.length}</span>
+        </div>
+        <div class="grid-section-body">${items.map(renderCardHTML).join('')}</div>
+      </div>
+    `);
+  });
+  grid.innerHTML = sections.join('');
 
   document.querySelectorAll('.card').forEach(el => {
     el.addEventListener('click', e => {
@@ -4529,7 +4915,73 @@ function renderGrid(){
   });
 }
 
-function render(){ renderStats(); renderPills(); renderGrid(); }
+function renderFlours(){
+  const counts = {};
+  ITEMS.forEach(it => {
+    if(!state.showDraft && it.draft) return;
+    for(const k of flourOf(it)) counts[k] = (counts[k]||0) + 1;
+  });
+  const wrap = $("flours-wrap");
+  const present = FLOUR_KEYS.filter(k => counts[k] > 0);
+  if(!present.length){ wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  $("flours").innerHTML = present.map(k => `
+    <div class="flour-chip ${state.activeFlours.has(k)?'active':''}" data-flour="${k}">
+      <span>${FLOUR_LABELS[k]||k}</span>
+      <span class="cnt">${counts[k]}</span>
+    </div>
+  `).join("");
+  document.querySelectorAll('.flour-chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const f = el.dataset.flour;
+      if(state.activeFlours.has(f)) state.activeFlours.delete(f);
+      else state.activeFlours.add(f);
+      render();
+    });
+  });
+}
+
+function renderTagCloud(){
+  const counts = {};
+  ITEMS.forEach(it => {
+    if(!state.showDraft && it.draft) return;
+    for(const t of (it.t||[])) counts[t] = (counts[t]||0) + 1;
+  });
+  // v010d: у хмарі показуємо лише інгредієнти/бренди (без грамівок/%/°C/час).
+  const all = Object.entries(counts)
+    .filter(([t]) => isIngredientTag(t))
+    .sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  const shown = state.tagCloudExpanded ? all : all.slice(0, 24);
+  $("tag-cloud").innerHTML = shown.map(([t, c]) => `
+    <div class="tag-chip ${state.activeTags.has(t)?'active':''}" data-tag="${esc(t)}">
+      <span>${esc(displayTag(t))}</span><span class="cnt">${c}</span>
+    </div>
+  `).join("");
+  const toggleBtn = $("tag-cloud-toggle");
+  toggleBtn.textContent = state.tagCloudExpanded ? 'менше' : `більше (${Math.max(0, all.length - 24)})`;
+  toggleBtn.style.display = (all.length > 24) ? '' : 'none';
+  $("tag-cloud-clear").style.display = state.activeTags.size ? '' : 'none';
+  document.querySelectorAll('.tag-chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const t = el.dataset.tag;
+      if(state.activeTags.has(t)) state.activeTags.delete(t);
+      else state.activeTags.add(t);
+      renderTagCloud();   // оновити хмару (стан кнопки clear + active)
+      render();            // переотрендерити grid (включно з pill-tags count)
+    });
+  });
+}
+
+function openTagsDialog(){
+  state.tagCloudExpanded = false;
+  renderTagCloud();
+  $("tags-bg").classList.add('open');
+}
+function closeTagsDialog(){
+  $("tags-bg").classList.remove('open');
+}
+
+function render(){ renderStats(); renderPills(); renderFlours(); renderGrid(); }
 
 // ============================================================
 // SHEET / RECIPE MODAL
@@ -5071,6 +5523,19 @@ $("btn-fav").addEventListener('click', () => {
   state.favOnly = !state.favOnly;
   $("btn-fav").classList.toggle('active', state.favOnly);
   renderGrid();
+});
+$("tags-done").addEventListener('click', closeTagsDialog);
+$("tags-bg").addEventListener('click', (e) => {
+  if(e.target === $("tags-bg")) closeTagsDialog();
+});
+$("tag-cloud-toggle").addEventListener('click', () => {
+  state.tagCloudExpanded = !state.tagCloudExpanded;
+  renderTagCloud();
+});
+$("tag-cloud-clear").addEventListener('click', () => {
+  state.activeTags.clear();
+  renderTagCloud();
+  render();
 });
 $("btn-set").addEventListener('click', openSettings);
 // ============================================================
