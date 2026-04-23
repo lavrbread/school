@@ -4341,7 +4341,7 @@ function renderGrid(){
     return `
       <div class="card ${it.r?'has-recipe':''}" data-idx="${idx}">
         <div class="card-img" style="color:${mainCat?.color}">
-          ${it.i? `<img src="${it.i}" alt="${esc(it.n)}" loading="lazy" onerror="this.style.display='none';this.parentNode.innerHTML+='${getIconSvg().replace(/'/g,"\\'")}'">`
+          ${it.i? `<img src="${it.i}" alt="" loading="lazy" onerror="this.onerror=null;this.style.display='none'">`
                 : getIconSvg()}
           ${badges?`<div class="card-badges">${badges}</div>`:''}
           <div class="card-fav ${fav?'on':''}" data-fav="${it.s}">
