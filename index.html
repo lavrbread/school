@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v16 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v17 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
 <meta name="description" content="lavr.SCHOOL — каталог рецептур Lesaffre. Укладено Ігорем Лаврешиним.">
+
+<!-- Block search engines -->
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="googlebot" content="noindex,nofollow">
 
 <!-- PWA -->
 <link rel="manifest" href="./manifest.webmanifest">
@@ -1030,7 +1034,112 @@ html, body {
   margin: 0 0 24px;
   max-width: 320px;
 }
+
+/* ======== Auth gate ======== */
+html.locked body { overflow: hidden; }
+html.locked .app { display: none !important; }
+html.locked #auth-gate { display: flex !important; }
+
+#auth-gate {
+  display: none;
+  position: fixed; inset: 0;
+  background: var(--lsf-cream);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+#auth-gate .auth-logo {
+  display: block;
+  height: 112px; width: auto;
+  margin: 0 auto 18px;
+}
+#auth-gate .auth-brand {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+}
+#auth-gate .auth-mark {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--lsf-red); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 20px; letter-spacing: -0.5px;
+}
+#auth-gate .auth-title {
+  font-size: 22px; font-weight: 700;
+  color: var(--lsf-black);
+  letter-spacing: -0.5px;
+  line-height: 1.05;
+}
+#auth-gate .auth-sub {
+  font-size: 13px; color: var(--lsf-muted);
+  margin-top: -2px;
+  line-height: 1.2;
+}
+#auth-gate .auth-box {
+  width: 100%; max-width: 320px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+#auth-gate input {
+  height: 46px; padding: 0 14px;
+  border: 1px solid var(--lsf-line-strong);
+  border-radius: var(--r-md);
+  background: #fff;
+  font-size: 16px; color: var(--lsf-ink);
+  outline: none;
+  -webkit-appearance: none;
+}
+#auth-gate input:focus {
+  border-color: var(--lsf-red);
+}
+#auth-gate button {
+  height: 46px;
+  border: none; border-radius: var(--r-md);
+  background: var(--lsf-red); color: #fff;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+}
+#auth-gate button:active { background: var(--lsf-red-dark); }
+#auth-gate .auth-err {
+  font-size: 13px; color: var(--lsf-red);
+  min-height: 18px;
+  margin-top: 2px;
+}
+#auth-gate .auth-hint {
+  font-size: 12px; color: var(--lsf-hint);
+  margin-top: 18px;
+  max-width: 280px;
+  line-height: 1.5;
+}
 </style>
+
+<!-- Inline gate check — runs before DOM parses, avoids flicker -->
+<script>
+try {
+  if (localStorage.getItem('lavr-auth') !== 'ok') {
+    document.documentElement.classList.add('locked');
+  }
+} catch(e) {
+  document.documentElement.classList.add('locked');
+}
+</script>
+
+<div id="auth-gate">
+  <img class="auth-logo" src="https://lesaffre.ua/wp-content/uploads/2024/08/Baking-with-lesaffre-pour-AE1.png" alt="Lesaffre" onerror="this.style.display='none'">
+  <div class="auth-brand">
+    <div class="auth-mark">lS</div>
+    <div style="text-align:left">
+      <div class="auth-title">lavr.SCHOOL</div>
+      <div class="auth-sub">каталог рецептур Lesaffre</div>
+    </div>
+  </div>
+  <form class="auth-box" id="auth-form" autocomplete="off">
+    <input id="auth-input" type="password" placeholder="пароль" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+    <button type="submit">Увійти</button>
+    <div class="auth-err" id="auth-err"></div>
+  </form>
+  <div class="auth-hint">Доступ для технологів та друзів.<br>Якщо не знаєш пароль — пиши <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener" style="color:var(--lsf-red)">@lavreshin</a>.</div>
+</div>
 
 <div class="app">
   <header class="hdr">
@@ -1089,7 +1198,7 @@ html, body {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v16</span>
+    <span class="footer-ver">v17</span>
   </footer>
 </div>
 
@@ -5465,6 +5574,16 @@ function openSettings(){
     <div class="sheet-foot-actions" style="grid-template-columns: 1fr">
       <button class="btn btn-secondary" id="clear-data" style="color:var(--lsf-red);border-color:var(--lsf-red)">Очистити мої дані</button>
     </div>
+
+    <div class="set-sec">
+      <h3 class="set-h">Доступ</h3>
+      <p style="font-size:12px;color:var(--lsf-muted);margin:0 0 10px;line-height:1.5">
+        Натискаєш «Вийти» — програма попросить пароль при наступному відкритті.
+      </p>
+      <div class="sheet-foot-actions" style="grid-template-columns: 1fr">
+        <button class="btn btn-secondary" id="auth-logout">Вийти</button>
+      </div>
+    </div>
   `;
 
   $("exp-clip").addEventListener('click', async () => {
@@ -5510,6 +5629,12 @@ function openSettings(){
     toast('Дані очищені');
     openSettings();
     renderStats(); renderGrid();
+  });
+
+  $("auth-logout").addEventListener('click', () => {
+    if(!confirm('Вийти? При наступному відкритті програма попросить пароль.')) return;
+    try { localStorage.removeItem('lavr-auth'); } catch(e){}
+    location.reload();
   });
 
   $("sheet-bg").classList.add('open');
@@ -5602,6 +5727,60 @@ const ctrls = $("ctrls");
 window.addEventListener('scroll', () => {
   ctrls.classList.toggle('stuck', window.scrollY > 10);
 });
+
+// ============================================================
+// AUTH GATE — SHA-256 password, checks agaisnt baked hashes
+// ============================================================
+const AUTH_HASHES = [
+  '56e29238708480582ae1b2c429a61e33ce8bc16076d0cbe2626270c5d430d10e', // slavaukraine
+  'ba50b7b76c02827492af18872bd94f232b3e8d42012ab3cfa0bd44f411b7e6b8', // lavrbread
+  'c7b68ac37f364473e922936708e7f43c293dd07b295171566c07ff5fe024fab9'  // ls
+];
+
+async function sha256hex(msg){
+  const buf = new TextEncoder().encode(msg);
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryAuth(pwd){
+  const h = await sha256hex(String(pwd || '').trim().toLowerCase());
+  return AUTH_HASHES.indexOf(h) !== -1;
+}
+
+function unlockApp(){
+  try { localStorage.setItem('lavr-auth', 'ok'); } catch(e){}
+  document.documentElement.classList.remove('locked');
+  const g = document.getElementById('auth-gate');
+  if(g) g.style.display = 'none';
+}
+
+(function initAuth(){
+  const form = document.getElementById('auth-form');
+  const input = document.getElementById('auth-input');
+  const err = document.getElementById('auth-err');
+  if(!form || !input) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.textContent = '';
+    const v = input.value;
+    if(!v){ err.textContent = 'Введи пароль'; return; }
+    const ok = await tryAuth(v);
+    if(ok){
+      unlockApp();
+    } else {
+      err.textContent = 'Невірний пароль';
+      input.value = '';
+      input.focus();
+    }
+  });
+
+  // Autofocus when locked
+  if(document.documentElement.classList.contains('locked')){
+    setTimeout(() => input.focus(), 100);
+  }
+})();
 
 (async () => {
   await loadAll();
