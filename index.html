@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v31 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v32 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -456,7 +456,7 @@ html, body {
   margin-bottom: 16px;
 }
 .scale-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.scale-label { font-size: 13px; color: var(--lsf-muted); }
+.scale-label { font-size: 14px; color: var(--lsf-ink); font-weight: 500; }
 .scale-val { font-size: 18px; font-weight: 600; color: var(--lsf-red); font-variant-numeric: tabular-nums; }
 .scale-slider {
   width: 100%; margin-top: 10px;
@@ -743,7 +743,7 @@ html, body {
   padding: 14px; margin-bottom: 12px;
 }
 .sec-h {
-  font-size: 13px; font-weight: 700;
+  font-size: 15px; font-weight: 700;
   color: var(--lsf-red);
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -751,7 +751,7 @@ html, body {
   display: flex; align-items: center; gap: 6px;
 }
 .sec-h::before {
-  content: ""; width: 4px; height: 14px;
+  content: ""; width: 4px; height: 16px;
   background: var(--lsf-red); border-radius: 2px;
 }
 
@@ -774,18 +774,18 @@ html, body {
   text-align: right; font-weight: 600;
   color: var(--lsf-black);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap; padding-left: 10px;
+  white-space: nowrap; padding-left: 6px;
 }
 .ing-t td.ig-p {
   text-align: right; color: var(--lsf-muted);
   font-size: 12px; font-variant-numeric: tabular-nums;
-  white-space: nowrap; padding-left: 8px; width: 50px;
+  white-space: nowrap; padding-left: 6px; width: 42px;
 }
 .ing-total {
   display: flex; justify-content: space-between; align-items: baseline;
   margin-top: 10px; padding-top: 10px;
-  border-top: 2px solid var(--lsf-black);
-  font-size: 18px; font-weight: 700;
+  border-top: 1px solid var(--lsf-black);
+  font-size: 14px; font-weight: 700;
 }
 .ing-total span, .ing-total b { font-weight: 700; }
 .ing-total b { color: var(--lsf-red); font-variant-numeric: tabular-nums; }
@@ -841,7 +841,7 @@ html, body {
 .prod-lnk:hover .prod-uni { color: var(--lsf-red); }
 .prod-all {
   margin-top: 10px; padding-top: 10px;
-  border-top: 2px solid var(--lsf-black);
+  border-top: 1px solid var(--lsf-black);
   font-size: 13px;
 }
 .prod-all a {
@@ -1343,7 +1343,7 @@ try {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v31</span>
+    <span class="footer-ver">v32</span>
   </footer>
 </div>
 
@@ -5739,26 +5739,6 @@ function renderRecipeSheet(idx){
       <div class="note-hint" id="note-hint">${notes?'Збережено':''}</div>
     </div>
 
-    <div class="sec">
-      <h3 class="sec-h">Пек ${cookedHist.length} ${cookedHist.length===1?'раз':cookedHist.length>=2&&cookedHist.length<=4?'рази':'разів'}</h3>
-      <div class="cook-row">
-        <div class="cook-info">
-          ${cookedHist.length? `Останній раз: <b>${new Date(cookedHist[cookedHist.length-1]).toLocaleDateString('uk-UA')}</b>`:'Ще не відмічав'}
-        </div>
-        <button class="cook-btn" id="cook-add">+ Спік</button>
-      </div>
-      ${cookedHist.length? `
-        <ul class="cook-history" id="cook-hist">
-          ${cookedHist.slice().reverse().slice(0,10).map((ts,i)=>`
-            <li>
-              <span>${new Date(ts).toLocaleDateString('uk-UA', {day:'numeric',month:'short',year:'numeric'})}</span>
-              <button class="cook-undo" data-ts="${ts}">видалити</button>
-            </li>
-          `).join('')}
-        </ul>
-      `:''}
-    </div>
-
     <div class="sheet-foot-actions">
       <a class="btn btn-primary" href="https://instagram.com/lavreshin" target="_blank" rel="noopener">Рецепти lavrbread</a>
       <button class="btn btn-secondary" id="copy-name">Копіювати назву</button>
@@ -5824,22 +5804,6 @@ function renderRecipeSheet(idx){
       noteHint.textContent = 'Збережено ✓';
       noteHint.className = 'note-hint saved';
     }, 500);
-  });
-
-  $("cook-add").addEventListener('click', async () => {
-    MEM.cooked[it.s] = MEM.cooked[it.s] || [];
-    MEM.cooked[it.s].push(Date.now());
-    await saveCooked();
-    toast('Відмічено: +1 раз');
-    renderRecipeSheet(idx);
-  });
-  document.querySelectorAll('.cook-undo').forEach(b => {
-    b.addEventListener('click', async () => {
-      const ts = parseInt(b.dataset.ts);
-      MEM.cooked[it.s] = (MEM.cooked[it.s]||[]).filter(t => t !== ts);
-      await saveCooked();
-      renderRecipeSheet(idx);
-    });
   });
 
   const prodAll = $("prod-all-lnk");
