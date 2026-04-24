@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v29 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v30 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -1343,7 +1343,7 @@ try {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v29</span>
+    <span class="footer-ver">v30</span>
   </footer>
 </div>
 
@@ -5703,7 +5703,7 @@ function renderRecipeSheet(idx){
               <td class="ig-p">${i.p}%</td>
             </tr>`).join('')}
         </tbody></table>
-        ${r.total? `<div class="ing-total"><span>Всього тіста</span><b id="t-tot">${(r.total.g*internalMult).toFixed(0)} г / ${r.total.p}% на борошно</b></div>`:''}
+        ${r.total? `<div class="ing-total"><span>Всього тіста</span><b id="t-tot">${(r.total.g*internalMult).toFixed(0)} г</b></div>`:''}
       </div>
 
       <div class="sec">
@@ -5778,7 +5778,7 @@ function renderRecipeSheet(idx){
         td.textContent = (g*iMult).toFixed(1) + ' г';
       });
       const tot = $("t-tot");
-      if(tot && it.r.total) tot.innerHTML = `${(it.r.total.g*iMult).toFixed(0)} г / ${it.r.total.p}% на борошно`;
+      if(tot && it.r.total) tot.innerHTML = `${(it.r.total.g*iMult).toFixed(0)} г`;
       document.querySelectorAll('.preset-btn[data-s]').forEach(b => {
         b.classList.toggle('on', Math.abs(parseFloat(b.dataset.s)-N) < 0.001);
       });
