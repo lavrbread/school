@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- lavr.SCHOOL v17 — Lesaffre recipe catalog by Ihor Lavreshyn -->
+<!-- lavr.SCHOOL v26 — Lesaffre recipe catalog by Ihor Lavreshyn -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>lavr.SCHOOL — каталог Lesaffre</title>
@@ -322,6 +322,7 @@ html, body {
 .badge-recipe { background: var(--lsf-red); color: white; }
 .badge-draft { background: var(--lsf-gold); color: var(--lsf-black); }
 .badge-new { background: #3b82f6; color: white; }
+.badge-tradizy { background: #1e3a8a; color: white; letter-spacing: 0.3px; }
 
 .card-body { padding: 10px 12px 12px; }
 .card-title {
@@ -547,6 +548,144 @@ html, body {
 .mass-btn.ok { background: var(--lsf-red); color: white; }
 .mass-btn.ok:disabled { background: var(--lsf-line-strong); cursor: not-allowed; }
 
+/* BAKER CALC (v018) — % інгредієнта від ваги борошна */
+.baker-calc {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--lsf-line);
+}
+.baker-calc-title {
+  font-size: 16px; font-weight: 700; color: var(--lsf-black);
+  margin: 0 0 4px;
+}
+.baker-calc-sub {
+  font-size: 12px; color: var(--lsf-muted);
+  margin-bottom: 10px;
+}
+.baker-calc-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.baker-calc-label {
+  font-size: 13px; color: var(--lsf-ink);
+  width: 88px; flex-shrink: 0;
+}
+.baker-calc-row .mass-input { flex: 1; padding: 8px 10px; font-size: 14px; }
+.baker-calc-result {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-top: 10px; padding: 10px 12px;
+  background: var(--lsf-warm); border-radius: var(--r-sm);
+}
+.baker-calc-eq {
+  font-size: 14px; font-weight: 600; color: var(--lsf-muted);
+  width: 88px; flex-shrink: 0;
+}
+.baker-calc-value {
+  font-size: 18px; font-weight: 700; color: var(--lsf-red);
+  font-variant-numeric: tabular-nums;
+}
+.baker-calc-unit { font-size: 12px; color: var(--lsf-muted); }
+
+/* BUY-BUTTON на сторінці "Інгредієнти" (v019) */
+.buy-btn {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--lsf-red); color: white;
+  border: none; border-radius: var(--r-md);
+  font-family: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  margin: 0 0 16px;
+  text-align: left;
+}
+.buy-btn:active { background: var(--lsf-red-dark); }
+.buy-btn-ico { font-size: 18px; line-height: 1; }
+.buy-btn-arrow { margin-left: auto; font-size: 18px; opacity: .9; }
+
+/* DISTRIB DIALOG (v019) — «Де придбати в Україні» */
+.distrib-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.distrib-bg.open { opacity: 1; pointer-events: auto; }
+.distrib-card {
+  background: white;
+  border-radius: var(--r-lg);
+  width: 100%; max-width: 460px;
+  max-height: 85vh;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transform: translateY(16px) scale(0.98);
+  transition: transform .2s ease;
+  display: flex; flex-direction: column;
+}
+.distrib-bg.open .distrib-card { transform: translateY(0) scale(1); }
+.distrib-title {
+  font-size: 16px; font-weight: 700; color: var(--lsf-black);
+  margin: 0 0 4px;
+}
+.distrib-sub {
+  font-size: 12px; color: var(--lsf-muted);
+  margin-bottom: 12px;
+}
+.distrib-regions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+  padding-bottom: 2px;
+}
+.distrib-reg {
+  padding: 6px 12px;
+  background: var(--lsf-warm);
+  border: 1px solid var(--lsf-line);
+  border-radius: 999px;
+  font-size: 12px; font-weight: 600;
+  color: var(--lsf-ink);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.distrib-reg:active, .distrib-reg.on {
+  background: var(--lsf-red); color: white; border-color: var(--lsf-red);
+}
+.distrib-card-box {
+  background: var(--lsf-warm);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 12px;
+  display: none;
+}
+.distrib-card-box.show { display: block; }
+.distrib-near {
+  font-size: 12px; color: var(--lsf-muted);
+  margin-bottom: 8px; line-height: 1.4;
+}
+.distrib-name {
+  font-size: 15px; font-weight: 700; color: var(--lsf-black);
+  margin-bottom: 6px;
+}
+.distrib-row {
+  font-size: 13px; color: var(--lsf-ink);
+  line-height: 1.5;
+  margin-bottom: 4px;
+  display: flex; gap: 8px;
+}
+.distrib-row .k {
+  color: var(--lsf-muted); min-width: 78px; flex-shrink: 0;
+}
+.distrib-row .v { flex: 1; }
+.distrib-row a {
+  color: var(--lsf-red); text-decoration: none; font-weight: 600;
+  word-break: break-all;
+}
+.distrib-actions {
+  display: flex; justify-content: flex-end;
+}
+
 /* TAGS DIALOG (v010b) */
 .tags-bg {
   position: fixed; inset: 0;
@@ -697,7 +836,9 @@ html, body {
 }
 .prod-lnk:hover .prod-uni { color: var(--lsf-red); }
 .prod-all {
-  margin-top: 8px; font-size: 12px;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 2px solid var(--lsf-black);
+  font-size: 13px;
 }
 .prod-all a {
   color: var(--lsf-red); text-decoration: none; font-weight: 600;
@@ -1198,7 +1339,7 @@ try {
       <span class="dot-sep">·</span>
       <a href="https://instagram.com/lavreshin" target="_blank" rel="noopener">@lavreshin</a>
     </div>
-    <span class="footer-ver">v17</span>
+    <span class="footer-ver">v26</span>
   </footer>
 </div>
 
@@ -1247,6 +1388,39 @@ try {
     <div class="mass-actions">
       <button class="mass-btn cancel" id="mass-cancel">Скасувати</button>
       <button class="mass-btn ok" id="mass-ok">Перерахувати</button>
+    </div>
+
+    <div class="baker-calc">
+      <div class="baker-calc-title">Пекарський калькулятор</div>
+      <div class="baker-calc-sub">% інгредієнта від ваги борошна</div>
+      <div class="baker-calc-row">
+        <span class="baker-calc-label">Борошно</span>
+        <input type="number" class="mass-input" id="bc-flour" placeholder="0" step="50" min="0" inputmode="decimal">
+        <span class="mass-unit">г</span>
+      </div>
+      <div class="baker-calc-row">
+        <span class="baker-calc-label">Інгредієнт</span>
+        <input type="number" class="mass-input" id="bc-ing" placeholder="0" step="1" min="0" inputmode="decimal">
+        <span class="mass-unit">г</span>
+      </div>
+      <div class="baker-calc-result">
+        <span class="baker-calc-eq">=</span>
+        <span class="baker-calc-value" id="bc-value">—</span>
+        <span class="baker-calc-unit">% від борошна</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISTRIB DIALOG (v019) -->
+<div class="distrib-bg" id="distrib-bg">
+  <div class="distrib-card">
+    <div class="distrib-title">Де придбати в Україні</div>
+    <div class="distrib-sub">Оберіть область</div>
+    <div class="distrib-regions" id="distrib-regions"></div>
+    <div class="distrib-card-box" id="distrib-card-box"></div>
+    <div class="distrib-actions">
+      <button class="mass-btn cancel" id="distrib-close">Закрити</button>
     </div>
   </div>
 </div>
@@ -4429,6 +4603,209 @@ const ITEMS = [
       },
       prod:["Суміш «Древлянська заварна» INVENTIS","Дріжджі «Рекорд» червоні","Карамальт","Magimix® голубий"]
     }},
+  // ============ v024: нові рецепти з дослідження «Livendo® Tradizy® Durum» ============
+  // Дозування 3-4% від маси борошна, без додаткових дріжджів (вбудовані), T° тіста 22-24°C.
+  // Джерело: lavrbread «Що таке Tradizy® Durum» v.1.0 — розділ 4 (реконструкція Lesaffre TDS).
+  {n:"Багет з Tradizy® Durum", c:["wheat"], s:"baget-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","Т55","2 багети"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне Т55 (хлібопекарне)",g:100,p:100},
+        {n:"Вода",g:62,p:62},
+        {n:"Livendo® Tradizy® Durum",g:4,p:4,l:1},
+        {n:"Сіль",g:1.8,p:1.8}
+      ],
+      total:{g:167.8,p:167.8},
+      proc:{
+        mesa:"спіральна або планетарна",
+        zames:"4 хв (1 шв) + 6 хв (2 шв)",
+        tempbaz:"58°C (базова T° для розрахунку води)",
+        temp:"22°C (цільова T° тіста)",
+        broz:"45 хв",
+        delenie:"350 г (≈2 багети з 500 г борошна)",
+        otdyh:"10-20 хв (предформовка)",
+        form:"ручна або машинна формовка в батон",
+        rast:"75 хв / 24°C",
+        otd:"1 поздовжній надріз",
+        vyp:"18 хв / 240°C в подовій печі з парою"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Чіабатта з Tradizy® Durum", c:["wheat","flat"], s:"chiabatta-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","висока гідратація","2 чіабатти"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне хлібопекарне",g:100,p:100},
+        {n:"Вода",g:75,p:75},
+        {n:"Livendo® Tradizy® Durum",g:3.5,p:3.5,l:1},
+        {n:"Сіль",g:2,p:2},
+        {n:"Олія оливкова",g:3,p:3}
+      ],
+      total:{g:183.5,p:183.5},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"мука+вода 10% в бассінаж + Tradizy → 4 хв (1 шв) + сіль + 5 хв (2 шв) → бассінаж → масло в кінці",
+        temp:"22-24°C",
+        broz:"60-90 хв / 22-24°C; складки через 30 і 60 хв",
+        delenie:"прямокутники ~300-400 г на мучній поверхні, без дегазації",
+        form:"мінімальна — обсипана мукою поверхня",
+        rast:"20-30 хв на кулінарному полотні (couche)",
+        vyp:"18-22 хв / 230-240°C з парою перші 10 хв"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Піца з Tradizy® Durum", c:["flat"], s:"pizza-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","тип 00","холодне брожіння","4 піци"],
+    r:{
+      ing:[
+        {n:"Борошно тип 00 (або хлібопекарне)",g:100,p:100},
+        {n:"Вода",g:63,p:63},
+        {n:"Livendo® Tradizy® Durum",g:3,p:3,l:1},
+        {n:"Сіль",g:2,p:2},
+        {n:"Олія оливкова",g:3,p:3}
+      ],
+      total:{g:171,p:171},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"все крім масла → 4 хв (1 шв) + 4-6 хв (2 шв) → масло в кінці → 2 хв (2 шв)",
+        temp:"22-24°C",
+        broz:"2-4 год / кімнатна, або 6-24 год / +4°C (холодне, виразніший смак)",
+        delenie:"шари 250-280 г",
+        otd_zav:"дозрівання шарів 4-8 год / 18-22°C (або до 48 год у холодильнику)",
+        form:"розтяжка руками перед випіканням",
+        vyp:"максимальна температура печі (250-350°C, залежить від обладнання)"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Pain de Campagne з Tradizy® Durum", c:["wheat","sourdough"], s:"pain-de-campagne-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","Т65","аутоліз","banneton"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне Т65 (або 80% біла + 20% цільнозернова)",g:100,p:100},
+        {n:"Вода",g:68,p:68},
+        {n:"Livendo® Tradizy® Durum",g:4,p:4,l:1},
+        {n:"Сіль",g:2,p:2}
+      ],
+      total:{g:174,p:174},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"1) Аутоліз (опц.): мука + вода → 20-30 хв; 2) додати Tradizy і сіль → 4 хв (1 шв) + 6 хв (2 шв)",
+        temp:"22-24°C",
+        broz:"60-90 хв; 1-2 складки",
+        otdyh:"15-20 хв (предформовка)",
+        form:"буль (кругла) або батар (овальна)",
+        rast:"60-90 хв / 24°C у banneton (кошику)",
+        otd:"надрізи перед посадкою",
+        vyp:"250°C з парою 15 хв → 220°C ще 25-30 хв; внутрішня T° 96°C"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Сендвіч-хліб з Tradizy® Durum", c:["wheat","sandwich"], s:"sendvich-xleb-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","форма Pullman","м'який"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне хлібопекарне",g:100,p:100},
+        {n:"Вода (або молоко)",g:60,p:60},
+        {n:"Livendo® Tradizy® Durum",g:3,p:3,l:1},
+        {n:"Сіль",g:1.8,p:1.8},
+        {n:"Цукор",g:4,p:4},
+        {n:"Масло вершкове",g:5,p:5}
+      ],
+      total:{g:173.8,p:173.8},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"все крім масла → 4 хв (1 шв) + 3 хв (2 шв) → м'яке масло → 5 хв (2 шв) до відходу тіста від стінок",
+        temp:"22-24°C",
+        broz:"60 хв",
+        form:"рулетом у форму Pullman",
+        rast:"60-80 хв до краю форми",
+        vyp:"180-190°C, 30-35 хв; внутрішня T° 94°C"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Milk Bread з Tradizy® Durum", c:["wheat","sandwich","butter"], s:"milk-bread-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","молочний","збагачене тісто"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне хлібопекарне",g:100,p:100},
+        {n:"Молоко цільне",g:55,p:55},
+        {n:"Livendo® Tradizy® Durum",g:2.5,p:2.5,l:1},
+        {n:"Сіль",g:1.6,p:1.6},
+        {n:"Цукор",g:8,p:8},
+        {n:"Масло вершкове",g:8,p:8},
+        {n:"Яйце",g:5,p:5}
+      ],
+      total:{g:180.1,p:180.1},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"як для сендвіч-хліба, АЛЕ масло додається в самому кінці замісу",
+        temp:"22-24°C",
+        broz:"60 хв",
+        form:"рулетом або косичкою у форму",
+        rast:"до подвоєння об'єму",
+        otd:"змастити яйцем перед випіканням (глазурування)",
+        vyp:"170-180°C, 25-30 хв"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Житній змішаний з Tradizy® Durum", c:["rye","wheat"], s:"rzhano-pshenichnyj-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","50/50 жито-пшениця","мед/патока"],
+    r:{
+      ing:[
+        {n:"Борошно житнє цільнозернове",g:50,p:50},
+        {n:"Борошно пшеничне Т65",g:50,p:50},
+        {n:"Вода",g:70,p:70},
+        {n:"Livendo® Tradizy® Durum",g:4,p:4,l:1},
+        {n:"Сіль",g:1.8,p:1.8},
+        {n:"Патока (або мед)",g:2,p:2}
+      ],
+      total:{g:177.8,p:177.8},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        zames:"4 хв (1 шв) + 6 хв (2 шв)",
+        temp:"22-24°C",
+        broz:"60-90 хв",
+        form:"батар або формовий",
+        rast:"60-80 хв / 24°C",
+        vyp:"230°C з парою 15 хв → 210°C ще 30-35 хв",
+        otd_zav:"Примітка: для 100% житнього хліба Tradizy недостатній — потрібна повноцінна житня закваска"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
+  {n:"Мультизерновий з Tradizy® Durum", c:["multigrain","wheat"], s:"multizernovyj-tradizy-durum",
+    i:"./img/tradizy-durum.jpg",
+    t:["tradizy-durum","закваска","livendo","насіння 20%","70/20/10 борошно"],
+    r:{
+      ing:[
+        {n:"Борошно пшеничне хлібопекарне",g:70,p:70},
+        {n:"Борошно пшеничне цільнозернове",g:20,p:20},
+        {n:"Борошно житнє",g:10,p:10},
+        {n:"Вода",g:70,p:70},
+        {n:"Livendo® Tradizy® Durum",g:3,p:3,l:1},
+        {n:"Сіль",g:2,p:2},
+        {n:"Замочка насіння (льон, соняшник, овес, кунжут)",g:20,p:20},
+        {n:"Вода для замочки",g:20,p:20}
+      ],
+      total:{g:215,p:215},
+      proc:{
+        mesa:"спіральна двошвидкісна",
+        otd_zav:"замочити насіння 2-4 год у 20% води",
+        zames:"основне тісто 4 хв (1 шв) + 6 хв (2 шв) → додати замочені насіння в кінці",
+        temp:"22-24°C",
+        broz:"60-90 хв",
+        form:"формовий або буль",
+        rast:"60-75 хв / 24°C",
+        vyp:"230°C з парою 15 хв → 200°C ще 30 хв"
+      },
+      prod:["Livendo® Tradizy® Durum"]
+    }},
 ];
 
 // ============================================================
@@ -4572,56 +4949,98 @@ const VIDEOS = [
   {g:"form",v:"AXSti8OOPCI",t:"Разделка фигурной сдобы в виде вензеля",d:"0:30",w:126},
 ];
 
+// v23 — інвентар переписано 1:1 з lesaffre.ua/industrial-market/?category=b2b
+// fallback для позицій без окремої ua-сторінки: /industrial-market/?category=b2b
+const B2B = "https://lesaffre.ua/industrial-market/?category=b2b";
 const MATERIALS = [
-  { grp:"yeast", name:"Прессовані дріжджі «Рекорд»", keys:["рекорд","recorded"], u:"https://lesaffre.ua/taxonomy/bread-making-yeast/",
-    variants:["червона етикетка","синя етикетка","Фрост"] },
-  { grp:"yeast", name:"Сухі інстантні дріжджі Saf-Instant®", keys:["saf-instant","саф-інстант","saf instant"], u:"https://lesaffre.ua/taxonomy/bread-making-yeast/",
-    variants:["золоті — для здоби","червоні — універсальні"] },
-  { grp:"yeast", name:"Дезактивовані дріжджі Baker's Bonus® «RS 190 star»", keys:["rs 190","rs190","baker's bonus","бейкерс бонус"], u:"https://lesaffre.ua/taxonomy/bread-making-yeast/" },
-  { grp:"yeast", name:"📖 Технологія виробництва дріжджів", keys:[], u:"https://lesaffre.ru/baking/tekhnologiya-proizvodstva-drozhzhej/", article:1,
-    variants:["стаття — як виробляють хлібопекарські дріжджі на заводі, ключові етапи"] },
-  { grp:"yeast", name:"📖 Інстантні дріжджі — що це таке?", keys:[], u:"https://lesaffre.ru/baking/instantnye-drozhzhi-chto-ehto-takoe/", article:1,
-    variants:["стаття — відмінності від сухих, особливості застосування, дозування"] },
+  // 🔴 ДРІЖДЖІ (9)
+  { grp:"yeast", name:"Пресовані дріжджі Рекорд™ з червоною етикеткою", keys:["рекорд червон","рекорд red","record red","рекорд"], u:B2B,
+    variants:["універсальні, для житньо-пшеничного та пшеничного тіста до 10% цукру"] },
+  { grp:"yeast", name:"Пресовані дріжджі Рекорд™ з оранжевою етикеткою", keys:["рекорд оранж","рекорд помаранч","рекорд orange"], u:"https://lesaffre.ua/products/presovani-hlibopekarski-drizhdzhi-rekord-z-oranzhevoyu-etiketkoyu/",
+    variants:["для здоби, куличів, з вмістом цукру > 5%"] },
+  { grp:"yeast", name:"Сухі швидкодіючі дріжджі Saf-Instant™", keys:["saf-instant","саф-інстант","saf instant","саф інстант"], u:"https://lesaffre.ua/products/suhi-shvidkodiyuchi-drizhdzhi-saf-instanttm/",
+    variants:["червоні — універсальні, на тісто до 10% цукру"] },
+  { grp:"yeast", name:"Сухі швидкодіючі дріжджі Saf-Instant™ Золотий", keys:["saf-instant золот","саф-інстант золот","saf instant gold","saf instant золотий"], u:"https://lesaffre.ua/products/suhi-shvidkodiyuchi-drizhdzhi-saf-instant-zolotij-2/",
+    variants:["осмотолерантні — для здоби, куличів, панеттоне"] },
+  { grp:"yeast", name:"Сухі інстантні дріжджі Saf-Moment™", keys:["saf-moment","саф-момент","saf moment"], u:B2B,
+    variants:["універсальні, додаються прямо в борошно"] },
+  { grp:"yeast", name:"Сухі активні дріжджі Саф-Левюр™", keys:["saf-levure","саф-левюр","saf levure"], u:B2B,
+    variants:["для випічки та напоїв, потребують попередньої активації у воді"] },
+  { grp:"yeast", name:"Сухі швидкодіючі дріжджі Nevada™", keys:["nevada","невада"], u:B2B,
+    variants:["для тіста до 10% цукру, 2 роки строк зберігання"] },
+  { grp:"yeast", name:"Пресовані дріжджі Криворізькі™", keys:["криворізьк","кривор","krivor","kryvor"], u:"https://lesaffre.ua/products/drizhdzhi-presovani-hlibopekarski-krivorizki-drizhdzhi-500-g-1-kg/",
+    variants:["для домашньої випічки, 500 г / 1 кг"] },
+  { grp:"yeast", name:"Дезактивовані дріжджі Baker's Bonus™ «РС 190 стар»", keys:["rs 190","rs190","рс 190","рс190","baker's bonus","бейкерс бонус"], u:"https://lesaffre.ua/products/rs190star/",
+    variants:["ослаблення клейковини для крекера, печива, піцци"] },
 
-  { grp:"magimix", name:"Magimix® з білою етикеткою", keys:["magimix білий","magimix® белый"], u:"https://lesaffre.ua/products/polipshuvach-mazhimiks-z-biloyu-etiketkoyu/" },
-  { grp:"magimix", name:"Magimix® з блакитною (Light Blue)", keys:["magimix голубой","магімікс блакитний","заморозка","чиабатта"], u:"https://lesaffre.ua/en/products/magimix-light-blue-improver/" },
-  { grp:"magimix", name:"Magimix® з синьою (Blue)", keys:["magimix синий","магімікс синій","тостовый","гамбургер банс"], u:"https://lesaffre.ua/en/products/magimix-blue-improver/" },
-  { grp:"magimix", name:"Magimix® з зеленою (Green)", keys:["magimix зелёный","magimix зелений","ослабление клейковины"], u:"https://lesaffre.ua/en/products/magimix-green-improver/" },
-  { grp:"magimix", name:"Magimix® із салатовою (Light Green)", keys:["салатов","light green"], u:"https://lesaffre.ua/products/polipshuvach-mazhimiks-iz-salatovoyu-etiketkoyu/" },
-  { grp:"magimix", name:"Magimix® із смарагдовою", keys:["смарагд"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-mazhimiks-iz-smaragdovoyu-etiketkoyu-magimix/" },
-  { grp:"magimix", name:"Magimix® з фіолетовою (Violet)", keys:["magimix фиолетовый","фіолетов","слойка+бриошь","слойка","листкові"], u:"https://lesaffre.ua/en/products/magimix-violet-improver/" },
-  { grp:"magimix", name:"Magimix® з жовтою (Yellow)", keys:["magimix жёлтый","yellow"], u:"https://lesaffre.ua/en/products/magimix-yellow-improver/" },
-  { grp:"magimix", name:"Magimix® із золотою (Gold)", keys:["magimix золотой","золотий"], u:"https://lesaffre.ua/en/products/magimix-gold-improver/" },
-  { grp:"magimix", name:"Magimix® з оранжевою (Orange)", keys:["magimix оранжевый","помаранч","ржанка","ибис","ібіс"], u:"https://lesaffre.ua/en/products/magimix-orange-improver/" },
-  { grp:"magimix", name:"Magimix® із сірою (Grey)", keys:["magimix серый","grey","сіри"], u:"https://lesaffre.ua/en/products/magimix-grey-improver/" },
-  { grp:"magimix", name:"Magimix® із рожевою (Rose)", keys:["magimix розовый","рожев","rose"], u:"https://lesaffre.ua/en/products/magimix-rose-improver/" },
-  { grp:"magimix", name:"Magimix® «Крафт»", keys:["крафт","craft"], u:"https://lesaffre.ua/taxonomy/bread-improvers-magimix/" },
-  { grp:"magimix", name:"Magimix® «Пауер Про»", keys:["пауэр про","пауер про","power pro"], u:"https://lesaffre.ua/taxonomy/bread-improvers-magimix/" },
-  { grp:"magimix", name:"Magimix® «АМ 301 / АМ 501 / PRO 404»", keys:["ам 301","am 301","ам 501","am 501","pro 404"], u:"https://lesaffre.ua/taxonomy/bread-improvers-magimix/" },
-  { grp:"magimix", name:"Magimix® «ПОЛ 102»", keys:["пол 102","пол-102"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-pol-102-magimix-tm/" },
-  { grp:"magimix", name:"Magimix® «ПОЛ 104»", keys:["пол 104","пол-104"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-pol-104-magimix/" },
-  { grp:"magimix", name:"Magimix® «Софт сендвіч бред» / «Софт гамбургер банс»", keys:["софт сэндвич","софт гамбургер","софт сендвіч","soft sandwich"], u:"https://lesaffre.ua/taxonomy/bread-improvers-magimix/" },
-  { grp:"magimix", name:"Magimix® «Тейк-н-бейк»", keys:["тейк-н-бейк","тейк н бейк","take and bake","take-and-bake"], u:"https://lesaffre.ua/taxonomy/bread-improvers-magimix/" },
+  // 🟠 MAGIMIX (15)
+  { grp:"magimix", name:"Поліпшувач Magimix™ з білою етикеткою", keys:["magimix білий","magimix белый","magimix біла","white label"], u:"https://lesaffre.ua/products/polipshuvach-mazhimiks-z-biloyu-etiketkoyu/",
+    variants:["універсальний, проти черствіння — свіжість продукту довше"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із синьою (Blue)", keys:["magimix синій","magimix синий","magimix blue","magimix синя"], u:B2B,
+    variants:["тостовий хліб, гамбургер-банси, хот-доги"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із зеленою (Green)", keys:["magimix зелен","magimix green","зелена етикетка"], u:B2B,
+    variants:["ослаблення клейковини для листкового тіста"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із салатовою (Light Green)", keys:["magimix салатов","light green","світло-зелен"], u:"https://lesaffre.ua/products/polipshuvach-mazhimiks-iz-salatovoyu-etiketkoyu/",
+    variants:["для заморожування після розстоювання — багети, піцца"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із смарагдовою", keys:["magimix смарагд","emerald"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-mazhimiks-iz-smaragdovoyu-etiketkoyu-magimix/",
+    variants:["листкові дріжджові з частково розстояних напівфабрикатів"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ з фіолетовою (Violet)", keys:["magimix фіолет","magimix фиолет","magimix violet","фіолетова етикетка"], u:B2B,
+    variants:["листкові, здоба, французькі батони"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ з жовтою (Yellow)", keys:["magimix жовт","magimix жёлт","magimix yellow","жовта етикетка"], u:B2B,
+    variants:["м'якість і об'єм, подовий хліб, здоба до 10% цукру"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із золотою (Gold)", keys:["magimix золот","magimix gold","золота етикетка"], u:B2B,
+    variants:["для здоби з високим вмістом жиру та цукру, листкові дріжджові"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ з оранжевою (Orange)", keys:["magimix оранж","magimix помаранч","magimix orange","оранжева етикетка","ржанка","ибис","ібіс"], u:B2B,
+    variants:["для житнього і житньо-пшеничного хліба"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із сірою (Grey)", keys:["magimix сір","magimix сер","magimix grey","сіра етикетка"], u:B2B },
+  { grp:"magimix", name:"Поліпшувач Magimix™ із рожевою (Rose)", keys:["magimix рожев","magimix розов","magimix rose","рожева етикетка"], u:B2B,
+    variants:["проти картопляної хвороби хліба"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ з блакитною (Light Blue)", keys:["magimix блакитн","magimix голуб","light blue","заморозка","чиабатта"], u:B2B,
+    variants:["для швидкого заморожування дріжджових напівфабрикатів"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ «ПОЛ 102»", keys:["пол 102","пол-102","пол102"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-pol-102-magimix-tm/",
+    variants:["для борошна зі слабкою клейковиною"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ «ПОЛ 104»", keys:["пол 104","пол-104","пол104"], u:"https://lesaffre.ua/products/polipshuvach-hlibopekarskij-pol-104-magimix/",
+    variants:["пришвидшення дозрівання тіста, подовження свіжості"] },
+  { grp:"magimix", name:"Поліпшувач Magimix™ «Софт'н Фреш» з оранжевою етикеткою", keys:["софт'н фреш оранж","софтн фреш помаранч","soft'n fresh orange","soft n fresh помаранч"], u:"https://lesaffre.ua/products/soft-n-fresh-z-oranzhevoyu-etiketkoyu-mazhimiks/",
+    variants:["подовжена свіжість для подової / формової випічки"] },
 
-  { grp:"inventis", name:"Inventis® заварна паста «Білоруська світла»", keys:["белорусская","білоруська","белорусск"], u:"https://lesaffre.ua/taxonomy/inventis-bakery-mixes-and-blends/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Мультизернова»", keys:["мультизернов","multizern"], u:"https://lesaffre.ua/products/zavarna-pasta-multizernova/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Солодова темна»", keys:["солодова","солод темн","рижская"], u:"https://lesaffre.ua/products/zavarna-pasta-solodova-temna/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Класична»", keys:["класична","классическая"], u:"https://lesaffre.ua/products/zavarna-pasta-klasichna/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Вівсяна»", keys:["овсяная","овсяна","вівсяна"], u:"https://lesaffre.ua/taxonomy/inventis-bakery-mixes-and-blends/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Маисова»", keys:["маисовая","маисова","кукурудз"], u:"https://lesaffre.ua/taxonomy/inventis-bakery-mixes-and-blends/" },
-  { grp:"inventis", name:"Inventis® заварна паста «Актимікс – семена і паприка»", keys:["актимикс","актимікс","семена и паприка"], u:"https://lesaffre.ua/taxonomy/inventis-bakery-mixes-and-blends/" },
-  { grp:"inventis", name:"Inventis® «Софт сдоба» / «Софт Крема» / «Софт лимон» / «Софт Кулич»", keys:["софт сдоба","софт крема","софт лимон","софт кулич","soft'n fresh","soft n fresh"], u:"https://lesaffre.ua/en/products/inventis-bakery-mix-soft-n-fresh-purple/" },
-  { grp:"inventis", name:"Inventis® «Тортилья»", keys:["тортилья","tortilla"], u:"https://lesaffre.ua/taxonomy/inventis-bakery-mixes-and-blends/" },
-  { grp:"inventis", name:"Inventis® «Бородинська»", keys:["бородинская","бородинськ"], u:"https://lesaffre.ua/en/products/inventis-bakery-mix-borodynska/" },
+  // 🟣 INVENTIS (10)
+  { grp:"inventis", name:"Inventis™ заварна паста «Класична»", keys:["класична","классическая","klasichna"], u:"https://lesaffre.ua/products/zavarna-pasta-klasichna/",
+    variants:["для хліба з пшеничного та житньо-пшеничного тіста"] },
+  { grp:"inventis", name:"Inventis™ заварна паста «Солодова темна»", keys:["солодова темн","солод темн","рижская","ризька"], u:"https://lesaffre.ua/products/zavarna-pasta-solodova-temna/",
+    variants:["темний солодовий смак — «ризький» профіль"] },
+  { grp:"inventis", name:"Inventis™ заварна паста «Мультизернова»", keys:["мультизернов","multizern"], u:"https://lesaffre.ua/products/zavarna-pasta-multizernova/",
+    variants:["для зернового хліба, насіння та пластівці у складі"] },
+  { grp:"inventis", name:"Inventis™ суміш «Балтійська заварна»", keys:["балтійськ","балтийск","baltijska"], u:"https://lesaffre.ua/products/sumish-dlya-virobnitstva-hliba-baltijska-zavarna-inventis/",
+    variants:["заварний житньо-пшеничний хліб, >50% жита"] },
+  { grp:"inventis", name:"Inventis™ суміш «Бородинська заварна»", keys:["бородинськ","бородинская","borodyn"], u:B2B,
+    variants:["для житньо-пшеничного хліба з коріандром"] },
+  { grp:"inventis", name:"Inventis™ суміш «Древлянська» (колишня «Білоруська»)", keys:["древлянськ","древлянська","белорусская","білоруська","белорусск"], u:B2B,
+    variants:["житній хліб з карамельним солодом"] },
+  { grp:"inventis", name:"Inventis™ суміш «Zrnopan S» (Пшенична зернова)", keys:["zrnopan","зрнопан","пшенична зернова"], u:B2B,
+    variants:["льон, соняшник, гарбуз — зерновий пшеничний хліб"] },
+  { grp:"inventis", name:"Inventis™ суміш «Multicereal bread»", keys:["multicereal","мультицереал","мультицерал","11 злаків"], u:B2B,
+    variants:["11 видів зерен та олійних культур"] },
+  { grp:"inventis", name:"Inventis™ суміш «Vineyard bread» (Віденська)", keys:["vineyard","віденськ","віденська","віноградн"], u:B2B,
+    variants:["соя, кукурудза, льон, соняшник"] },
+  { grp:"inventis", name:"Inventis™ суміш «Софт'н Фреш» з фіолетовою етикеткою", keys:["софт'н фреш фіолет","soft'n fresh purple","soft n fresh purple","софтн фреш фіолет"], u:B2B,
+    variants:["здоба з ванільно-кремовим ароматом, без яйця в рецепті"] },
 
-  { grp:"livendo", name:"Livendo® LV1 — стартова культура", keys:["livendo lv1","lv1","саф-левен"], u:"https://lesaffre.ua/en/products/livendo-starter-lv1/" },
-  { grp:"livendo", name:"Livendo® LV4 — стартова культура", keys:["livendo lv4","lv4"], u:"https://lesaffre.ua/taxonomy/livendo-bread-making-starters/" },
-  { grp:"livendo", name:"Livendo® LV5 — стартова культура", keys:["livendo lv5","lv5"], u:"https://lesaffre.ru/catalog/dlya-proizvoditelej/zakvaski-i-startovie-kyltyri/startovaya-kultura-livendo-lv5/" },
-  { grp:"livendo", name:"Livendo® «Аром Левен»", keys:["аром левен","arome leven","arom leven"], u:"https://lesaffre.ua/taxonomy/livendo-bread-making-starters/",
-    variants:["звичайний","темний","екстратемний"] },
-  { grp:"livendo", name:"Livendo® «Соургрейн» — заварні пасти на заквасці", keys:["соургрейн","sourgrain"], u:"https://lesaffre.ua/taxonomy/livendo-bread-making-starters/",
-    variants:["Полба","Рожь","Печёное яблоко"] },
-  { grp:"livendo", name:"Livendo® «Рітеза Світла» — рідкий напівфабрикат", keys:["рітеза","riteza","ritesa"], u:"https://lesaffre.ua/products/ridkij-napivfabrikat-dlya-virobnitstva-hliba-riteza-lajt-livendo/" },
+  // 🟢 LIVENDO (6)
+  { grp:"livendo", name:"Стартова культура Livendo™ ЛВ1", keys:["лв1","lv1","саф-левен","livendo lv1"], u:B2B,
+    variants:["для багетів, pain au levain, boule au levain, брам"] },
+  { grp:"livendo", name:"Стартова культура Livendo™ ЛВ2", keys:["лв2","lv2","livendo lv2"], u:B2B,
+    variants:["для пшеничних заквасок, європейський хліб преміум-сегменту"] },
+  { grp:"livendo", name:"Стартова культура Livendo™ ЛВ5", keys:["лв5","lv5","livendo lv5"], u:"https://lesaffre.ua/products/startova-kultura-lv5-livendotm/",
+    variants:["густі та рідкі закваски з житнього борошна для житньо-пшеничного хліба"] },
+  { grp:"livendo", name:"Livendo™ «Дурум БД 100» — пшенична суха закваска", keys:["бд100","бд 100","bd100","дурум бд","durum bd"], u:"https://lesaffre.ua/products/zakvaska-pshenichna-suha-livendo-durum-bidi-100-livendotm/",
+    variants:["ферментований аромат тіста, молочнокислі ноти"] },
+  { grp:"livendo", name:"Livendo® Tradizy® Durum — суміш х/п (active bakery component)", keys:["tradizy","традизі","традизи","tradizy durum","tradizi durum","сумiш durum"], u:"https://lesaffre.ua/products/sumish-h-p-tradizi-durum-tm-livendo-tm-tradizy/",
+    variants:["девіталізована закваска durum + дріжджі + ферменти","дозування 3-4% від маси борошна","смак: dairy, crackers, sourdough, ripe wheat"] },
+  { grp:"livendo", name:"Livendo™ «Рітеза Світла» — рідкий напівфабрикат", keys:["рітеза світла","riteza лайт","ritesa","riteza lajt","riteza light"], u:"https://lesaffre.ua/products/ridkij-napivfabrikat-dlya-virobnitstva-hliba-riteza-lajt-livendo/",
+    variants:["елітні пшеничні, житні, житньо-пшеничні хліби"] },
+  { grp:"livendo", name:"Livendo™ «Рітеза Текута» — рідкий напівфабрикат", keys:["рітеза текута","riteza текута","riteza tekuta"], u:"https://lesaffre.ua/products/ridkij-napivfabrikat-riteza-tekuta-tm-livendo/",
+    variants:["житнє та житньо-пшеничне борошно, підсилення смаку"] },
 ];
 
 const MAT_GRP_LABELS = {
@@ -4629,6 +5048,14 @@ const MAT_GRP_LABELS = {
   magimix:  "Поліпшувачі Magimix™",
   inventis: "Суміші та бленди Inventis™",
   livendo:  "Закваски Livendo™",
+};
+
+// v023 — fallback URL для позицій без окремої продуктової сторінки: b2b-каталог
+const MAT_GRP_URLS = {
+  yeast:    B2B,
+  magimix:  B2B,
+  inventis: B2B,
+  livendo:  B2B,
 };
 
 // Пошук матеріалу за назвою продукту з рецепту
@@ -4803,16 +5230,36 @@ function toast(msg){
 
 // ===== MASS DIALOG ("під вагу тіста") =====
 let _massOnConfirm = null;
-function openMassDialog(doughAtN1, onConfirm){
+function openMassDialog(doughAtN1, currentFlour, onConfirm){
   _massOnConfirm = onConfirm;
   const sub = $("mass-sub");
   sub.textContent = `×1 = 1 кг борошна → ${doughAtN1.toFixed(0)} г тіста`;
   const input = $("mass-input");
   input.value = '';
   document.querySelectorAll('#mass-presets .mass-preset').forEach(b => b.classList.remove('on'));
+  // Baker calc — autopopulate flour from current recipe, clear ingredient + result
+  const bcFlour = $("bc-flour");
+  const bcIng   = $("bc-ing");
+  const bcVal   = $("bc-value");
+  bcFlour.value = (currentFlour && currentFlour > 0) ? Math.round(currentFlour) : '';
+  bcIng.value   = '';
+  bcVal.textContent = '—';
   $("mass-bg").classList.add('open');
   setTimeout(() => input.focus(), 200);
 }
+function bakerCalcRecalc(){
+  const flour = parseFloat(($("bc-flour").value || '').replace(',','.'));
+  const ing   = parseFloat(($("bc-ing").value   || '').replace(',','.'));
+  const val   = $("bc-value");
+  if(!flour || flour <= 0 || isNaN(ing) || ing < 0 || $("bc-ing").value.trim() === ''){
+    val.textContent = '—';
+    return;
+  }
+  const pct = (ing / flour) * 100;
+  val.textContent = pct.toFixed(2).replace('.', ',') + '%';
+}
+$("bc-flour").addEventListener('input', bakerCalcRecalc);
+$("bc-ing").addEventListener('input',   bakerCalcRecalc);
 function closeMassDialog(){
   $("mass-bg").classList.remove('open');
   _massOnConfirm = null;
@@ -4844,6 +5291,87 @@ $("mass-input").addEventListener('keydown', e => {
 $("mass-ok").addEventListener('click', confirmMassDialog);
 $("mass-cancel").addEventListener('click', closeMassDialog);
 $("mass-bg").addEventListener('click', e => { if(e.target === $("mass-bg")) closeMassDialog(); });
+
+// ===== DISTRIB DIALOG ("Де придбати в Україні") — v019 =====
+const DISTRIBUTORS = {
+  rubis:        { name: 'ТОВ «Рубіс»',               contact: 'Палій Юлія',             phone: '066 732 17 40', url: 'https://tortino.com.ua/' },
+  anastasia:    { name: 'Анастасія ЛТД',              contact: 'Бейгель Анастасія',      phone: '067 412 09 09', url: 'https://anastasiia-pp.prom.ua/ua/' },
+  pd:           { name: 'Пекарський Дім',              contact: 'Шелашева Анна',          phone: '050 335 05 30' },
+  pk:           { name: 'Пекар Кондитер',              contact: 'Кисленко Людмила',       phone: '097 684 87 09' },
+  smak:         { name: 'ТОВ «Смакмаркет»',           contact: 'Заяц Наталія Миколаївна',phone: '093 651 24 94', url: 'https://bakery.dp.ua' },
+  ariant_lviv:  { name: 'Аріанта Центр Пекарів ТОВ',  addr: 'м. Львів, ринок «Шувар», павільйон №27/Р', phone: '050 371 14 98', url: 'https://arianta.com.ua' },
+  ariant_lutsk: { name: 'Аріанта Центр Пекарів ТОВ',  addr: 'м. Луцьк, вул. Рівненська, 44',            phone: '050 378 81 44', url: 'https://arianta.com.ua' },
+  ariant_muk:   { name: 'Аріанта Центр Пекарів ТОВ',  addr: 'м. Мукачево, вул. Пряшівська',              phone: '050 637 52 11', url: 'https://arianta.com.ua' },
+  forum:        { name: 'ПП Форум',                    contact: 'Чорна Анастасія',        phone: '067 358 62 06', url: 'https://all-for-cakes.com.ua/katalog/' },
+  zlev:         { name: 'ТОВ «Золотий лев»',           phone: '0512 670 518',             url: 'https://www.facebook.com/del.gusto.75' }
+};
+// 24 області, ближні — з прапорцем near:true
+const REGIONS = [
+  { n: 'Вінницька',         d: 'anastasia',    near: true },
+  { n: 'Волинська',         d: 'ariant_lutsk' },
+  { n: 'Дніпропетровська',  d: 'smak' },
+  { n: 'Донецька',          d: 'smak',         near: true },
+  { n: 'Житомирська',       d: 'anastasia' },
+  { n: 'Закарпатська',      d: 'ariant_muk' },
+  { n: 'Запорізька',        d: 'smak',         near: true },
+  { n: 'Івано-Франківська', d: 'ariant_lviv',  near: true },
+  { n: 'Київська',          d: 'pd' },
+  { n: 'Кіровоградська',    d: 'pk',           near: true },
+  { n: 'Луганська',          d: 'smak',         near: true },
+  { n: 'Львівська',         d: 'ariant_lviv' },
+  { n: 'Миколаївська',      d: 'zlev' },
+  { n: 'Одеська',           d: 'forum' },
+  { n: 'Полтавська',        d: 'pk',           near: true },
+  { n: 'Рівненська',         d: 'ariant_lutsk', near: true },
+  { n: 'Сумська',           d: 'pd',           near: true },
+  { n: 'Тернопільська',     d: 'rubis' },
+  { n: 'Харківська',        d: 'smak',         near: true },
+  { n: 'Херсонська',        d: 'zlev' },
+  { n: 'Хмельницька',       d: 'rubis',        near: true },
+  { n: 'Черкаська',         d: 'pk' },
+  { n: 'Чернівецька',       d: 'rubis',        near: true },
+  { n: 'Чернігівська',      d: 'pd' }
+];
+function openDistribDialog(){
+  const wrap = $("distrib-regions");
+  wrap.innerHTML = REGIONS.map((r, i) => `<button class="distrib-reg" data-ri="${i}">${esc(r.n)}</button>`).join('');
+  $("distrib-card-box").classList.remove('show');
+  $("distrib-card-box").innerHTML = '';
+  wrap.querySelectorAll('.distrib-reg').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.distrib-reg').forEach(x => x.classList.remove('on'));
+      btn.classList.add('on');
+      renderDistribCard(parseInt(btn.dataset.ri, 10));
+    });
+  });
+  $("distrib-bg").classList.add('open');
+}
+function renderDistribCard(ri){
+  const reg = REGIONS[ri];
+  const d = DISTRIBUTORS[reg.d];
+  if(!d) return;
+  const parts = [];
+  if(reg.near){
+    // знайти, в якій області реально знаходиться цей дистриб'ютор (перший не-near match)
+    const host = REGIONS.find(x => x.d === reg.d && !x.near);
+    const hostName = host ? host.n.replace(/ська$/, 'ській').replace(/цька$/, 'цькій') : '';
+    parts.push(`<div class="distrib-near">Вашої області нема в списку. Найближчий представник${hostName ? ' у ' + hostName + ' області' : ''}:</div>`);
+  }
+  parts.push(`<div class="distrib-name">${esc(d.name)}</div>`);
+  if(d.contact) parts.push(`<div class="distrib-row"><span class="k">Контакт</span><span class="v">${esc(d.contact)}</span></div>`);
+  if(d.addr)    parts.push(`<div class="distrib-row"><span class="k">Адреса</span><span class="v">${esc(d.addr)}</span></div>`);
+  if(d.phone){
+    const phoneClean = d.phone.replace(/[^0-9+]/g, '');
+    parts.push(`<div class="distrib-row"><span class="k">Телефон</span><span class="v"><a href="tel:${phoneClean}">${esc(d.phone)}</a></span></div>`);
+  }
+  if(d.url) parts.push(`<div class="distrib-row"><span class="k">Сайт</span><span class="v"><a href="${d.url}" target="_blank" rel="noopener">${esc(d.url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a></span></div>`);
+  const box = $("distrib-card-box");
+  box.innerHTML = parts.join('');
+  box.classList.add('show');
+}
+function closeDistribDialog(){ $("distrib-bg").classList.remove('open'); }
+$("distrib-close").addEventListener('click', closeDistribDialog);
+$("distrib-bg").addEventListener('click', e => { if(e.target === $("distrib-bg")) closeDistribDialog(); });
 
 function byCats(item){ return item.c.map(c => CATS[c]?.label||c); }
 
@@ -4935,7 +5463,9 @@ function renderCardHTML({it, idx}){
   const mainCat = CATS[it.c[0]];
   const fav = MEM.favorites.has(it.s);
   const isNew = (it.t||[]).includes('нові');
+  const isTradizy = (it.t||[]).includes('tradizy-durum');
   const badges = [
+    isTradizy ? `<span class="badge badge-tradizy">tradizy</span>`:'',
     isNew ? `<span class="badge badge-new">нові</span>`:'',
     it.r ? `<span class="badge badge-recipe">рецепт</span>`:'',
     it.draft ? `<span class="badge badge-draft">v5</span>`:''
@@ -5260,7 +5790,9 @@ function renderRecipeSheet(idx){
     $("sc-bymass").addEventListener('click', () => {
       if(!it.r.total || !flourBase) return;
       const doughAtN1 = 1000 * it.r.total.p / 100; // скільки тіста при 1 кг муки
-      openMassDialog(doughAtN1, (targetDough) => {
+      const currentN = parseFloat(sliderEl.value); // поточне ×-значення
+      const currentFlour = currentN * 1000;        // поточна вага борошна в грамах
+      openMassDialog(doughAtN1, currentFlour, (targetDough) => {
         const N = targetDough / doughAtN1;
         const sMin = parseFloat(sliderEl.min);
         const sMax = parseFloat(sliderEl.max);
@@ -5369,12 +5901,14 @@ function openMaterials(highlightIdx){
   const groupsHtml = groups.map(g => `
     <div class="mat-grp" id="grp-${g}">
       <h3 class="mat-grp-h">${MAT_GRP_LABELS[g]}</h3>
-      ${byGrp[g].map(({m, idx}) => `
-        <a href="${m.u}" target="_blank" rel="noopener" class="mat-item" id="mat-${idx}">
+      ${byGrp[g].map(({m, idx}) => {
+        const href = m.u;
+        return `
+        <a href="${href}" target="_blank" rel="noopener" class="mat-item" id="mat-${idx}">
           <div class="mat-item-n">${esc(m.name)}</div>
           ${m.variants ? `<div class="mat-item-v">${m.variants.map(v=>esc(v)).join(' · ')}</div>` : ''}
-        </a>
-      `).join('')}
+        </a>`;
+      }).join('')}
     </div>
   `).join('');
 
@@ -5383,6 +5917,10 @@ function openMaterials(highlightIdx){
     <p style="font-size:13px;color:var(--lsf-muted);line-height:1.5;margin:0 0 14px">
       Продукти Lesaffre, які використовуються в рецептах каталогу. Посилання ведуть на українське представництво <a href="https://lesaffre.ua" target="_blank" rel="noopener" style="color:var(--lsf-red);text-decoration:none;font-weight:600">lesaffre.ua</a>.
     </p>
+    <button class="buy-btn" id="buy-btn">
+      <span>Де придбати в Україні</span>
+      <span class="buy-btn-arrow">→</span>
+    </button>
     ${cloudHtml}
     ${groupsHtml}
     <div class="mat-foot">
@@ -5399,6 +5937,10 @@ function openMaterials(highlightIdx){
       if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
     });
   });
+
+  // «Де придбати» — відкрити модалку
+  const buyBtn = $("buy-btn");
+  if(buyBtn) buyBtn.addEventListener('click', openDistribDialog);
 
   $("sheet-bg").classList.add('open');
   document.body.style.overflow = 'hidden';

@@ -1,5 +1,5 @@
 // lavr.SCHOOL — service worker (offline cache)
-const CACHE = 'lavr-school-v26';
+const CACHE = 'lavr-school-v35';
 const ASSETS = [
   './',
   './index.html',
@@ -146,7 +146,8 @@ const ASSETS = [
   './img/kruassan-na-masle.jpg',
   './img/xleb-drevlyanskyj-zavarnyj.jpg',
   './img/xleb-desnyanskyj.jpg',
-  './img/xleb-litovskyj.jpg'
+  './img/xleb-litovskyj.jpg',
+  './img/tradizy-durum.jpg'
 ];
 
 self.addEventListener('install', (e) => {
